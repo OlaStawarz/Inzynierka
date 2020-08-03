@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipesStep1">
+
+    <ImageView
+        android:id="@+id/imageViewFour"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/one"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/textViewEnterName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Wprowadź nazwę przepisu"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFour" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Omlet bananowy"
+        app:layout_constraintStart_toStartOf="@+id/textViewEnterName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEnterName" />
+
+    <TextView
+        android:id="@+id/textViewChooseCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Wybierz kategorie"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/editTextName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+    <CheckBox
+        android:id="@+id/checkBoxBreakfast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Śniadanie"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewChooseCategory"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChooseCategory" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="Obiad"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/checkBoxBreakfast"
+        app:layout_constraintTop_toTopOf="@+id/checkBoxBreakfast" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSupper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Kolacja"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/checkBoxBreakfast"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxBreakfast" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSnack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Przekąski"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/checkBoxDinner"
+        app:layout_constraintTop_toTopOf="@+id/checkBoxSupper" />
+
+    <Button
+        android:id="@+id/buttonNext1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="32dp"
+        android:text="Dalej"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxSnack" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
