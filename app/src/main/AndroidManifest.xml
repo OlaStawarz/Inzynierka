@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Recipes.RecipeDetail"></activity>
-        <activity android:name=".Recipes.DisplayRecipes" />
+        <activity android:name=".Recipes.RecipeDetail"
+            android:parentActivityName=".Recipes.Recipes"/>
+        <activity android:name=".Recipes.DisplayRecipes"
+            android:parentActivityName=".Recipes.Recipes"/>
         <activity android:name=".Recipes.RecipesStep4" />
         <activity android:name=".Recipes.RecipesStep3" />
         <activity android:name=".Recipes.RecipesStep2" />

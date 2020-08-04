@@ -37,7 +37,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        String displayIngredients = "";
+        // String displayIngredients = "";
 
         RecipeModel recipeModel = recipes.get(position);
         holder.recipeName.setText(recipeModel.getName());
@@ -76,7 +76,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             this.onItemClickedListener = onItemClickedListener;
             //ingredients = itemView.findViewById(R.id.textViewDisplayIngredients);
             //description = itemView.findViewById(R.id.textViewDisplayDescription);
-            link = itemView.findViewById(R.id.textViewDisplayLink);
+            // link = itemView.findViewById(R.id.textViewDisplayLink);
 
             itemView.setOnClickListener(this);
         }

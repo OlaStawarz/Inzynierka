@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".Recipes.Recipes">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/horizontal_recycler_view"
+        android:layout_width="387dp"
+        android:layout_height="181dp"
+        app:layout_constraintBottom_toTopOf="@+id/breakfast_card_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -20,9 +29,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/breakfast_card_view"
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="220dp"
         app:cardCornerRadius="8sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -41,7 +50,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/dinner_card_view"
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_marginEnd="35dp"
         app:cardCornerRadius="8sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +70,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/supper_card_view"
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="8sp"
         app:layout_constraintStart_toStartOf="@+id/breakfast_card_view"
@@ -82,7 +91,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/snacks_card_view"
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         app:cardCornerRadius="8sp"
         app:layout_constraintStart_toStartOf="@+id/dinner_card_view"
         app:layout_constraintTop_toTopOf="@+id/supper_card_view">

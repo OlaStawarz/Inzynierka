@@ -3,6 +3,9 @@ package com.example.myapp.Recipes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,12 +18,23 @@ import com.example.myapp.R;
 import com.example.myapp.ShoppingList.ShoppingList;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class Recipes extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class Recipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener{
 
     CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView;
     Intent intent;
     Bundle bundle;
+    RecyclerView recyclerView;
+    DatabaseReference databaseReference;
+    ArrayList<RecipeModel> recipes;
+    RecipeAdapter recipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +48,33 @@ public class Recipes extends AppCompatActivity {
         dinnerCardView = findViewById(R.id.dinner_card_view);
         supperCardView = findViewById(R.id.supper_card_view);
         snackCardView = findViewById(R.id.snacks_card_view);
+        recyclerView = findViewById(R.id.horizontal_recycler_view);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
+        recipes = new ArrayList<>();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(Recipes.this,
+                LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    RecipeModel recipeModel = postSnapshot.getValue(RecipeModel.class);
+                    recipes.add(recipeModel);
+                }
+                recipeAdapter = new RecipeAdapter(Recipes.this, recipes,
+                        Recipes.this);
+                recyclerView.setAdapter(recipeAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         intent = new Intent(Recipes.this, DisplayRecipes.class);
         bundle = new Bundle();
@@ -105,4 +146,16 @@ public class Recipes extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void itemClicked(int position) {
+        Toast.makeText(Recipes.this, "Clicked", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(Recipes.this, RecipeDetail.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("name", recipes.get(position).getName());
+        bundle.putString("image", recipes.get(position).getImageUrl());
+
+        Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }
