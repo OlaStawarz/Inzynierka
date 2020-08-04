@@ -9,14 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DisplayRecipesBreakfast"></activity>
-        <activity android:name=".RecipesStep4" />
-        <activity android:name=".RecipesStep3" />
-        <activity android:name=".RecipesStep2" />
-        <activity android:name=".RecipesStep1" />
-        <activity android:name=".Recipes" />
-        <activity android:name=".ShoppingList" />
-        <activity android:name=".Planner" />
+        <activity android:name=".Recipes.RecipeDetail"></activity>
+        <activity android:name=".Recipes.DisplayRecipes" />
+        <activity android:name=".Recipes.RecipesStep4" />
+        <activity android:name=".Recipes.RecipesStep3" />
+        <activity android:name=".Recipes.RecipesStep2" />
+        <activity android:name=".Recipes.RecipesStep1" />
+        <activity android:name=".Recipes.Recipes" />
+        <activity android:name=".ShoppingList.ShoppingList" />
+        <activity android:name=".Planner.Planner" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

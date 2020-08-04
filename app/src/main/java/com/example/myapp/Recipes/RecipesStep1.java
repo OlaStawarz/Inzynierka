@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.example.myapp.Recipes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import com.example.myapp.R;
 
 import java.util.ArrayList;
 

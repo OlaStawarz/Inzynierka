@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.example.myapp.Recipes;
 
 import java.util.ArrayList;
 

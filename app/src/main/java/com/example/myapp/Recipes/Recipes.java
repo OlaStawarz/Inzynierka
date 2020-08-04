@@ -1,4 +1,4 @@
-package com.example.myapp;
+package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.myapp.Planner.Planner;
+import com.example.myapp.R;
+import com.example.myapp.ShoppingList.ShoppingList;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Recipes extends AppCompatActivity {
 
-    CardView breakfastCardView;
+    CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView;
+    Intent intent;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,12 @@ public class Recipes extends AppCompatActivity {
         FloatingActionButton addRecipeButton = findViewById(R.id.addRecipeButton);
 
         breakfastCardView = findViewById(R.id.breakfast_card_view);
+        dinnerCardView = findViewById(R.id.dinner_card_view);
+        supperCardView = findViewById(R.id.supper_card_view);
+        snackCardView = findViewById(R.id.snacks_card_view);
+
+        intent = new Intent(Recipes.this, DisplayRecipes.class);
+        bundle = new Bundle();
 
         bottomNavigationView.setSelectedItemId(R.id.recipes);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -60,9 +71,38 @@ public class Recipes extends AppCompatActivity {
         breakfastCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Recipes.this, DisplayRecipesBreakfast.class);
+                bundle.putString("category", "breakfast");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        dinnerCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString("category", "dinner");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        supperCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString("category", "supper");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        snackCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString("category", "snack");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
     }
+
 }
