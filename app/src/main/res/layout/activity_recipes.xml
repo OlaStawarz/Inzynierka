@@ -8,8 +8,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/horizontal_recycler_view"
-        android:layout_width="387dp"
-        android:layout_height="181dp"
+        android:layout_width="350dp"
+        android:layout_height="157dp"
         app:layout_constraintBottom_toTopOf="@+id/breakfast_card_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

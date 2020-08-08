@@ -38,7 +38,6 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recipes = new ArrayList<>();
-
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
 
         Intent intent = getIntent();

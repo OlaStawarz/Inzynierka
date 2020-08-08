@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShoppingList.AddItem">
+
+    <TextView
+        android:id="@+id/textViewAddNameShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:text="Dodaj nazwę"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextNameShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="chleb"
+        app:layout_constraintStart_toStartOf="@+id/textViewAddNameShoppingList"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddNameShoppingList" />
+
+    <TextView
+        android:id="@+id/textViewAddAmountShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Ilość"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/editTextNameShoppingList"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNameShoppingList" />
+
+    <EditText
+        android:id="@+id/editTextAddAmountShoppingList"
+        android:layout_width="109dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textViewAddAmountShoppingList"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddAmountShoppingList" />
+
+    <TextView
+        android:id="@+id/textViewAddUnitShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="Jednostka"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewAddAmountShoppingList" />
+
+    <Spinner
+        android:id="@+id/spinnerAddUnitShoppingList"
+        android:layout_width="86dp"
+        android:layout_height="31dp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewAddUnitShoppingList"
+        app:layout_constraintTop_toTopOf="@+id/editTextAddAmountShoppingList" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionBarAddItemShoppingList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_add"
+        app:layout_constraintEnd_toEndOf="@+id/spinnerAddUnitShoppingList"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAddAmountShoppingList" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
