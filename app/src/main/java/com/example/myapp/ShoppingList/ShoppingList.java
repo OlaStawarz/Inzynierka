@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapp.Planner.Planner;
 import com.example.myapp.R;
@@ -29,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ShoppingList extends AppCompatActivity {
+public class ShoppingList extends AppCompatActivity implements ShoppingListAdapter.ItemClickedListener{
 
     private TextView amountTextView;
     private RecyclerView recyclerView;
@@ -40,6 +42,7 @@ public class ShoppingList extends AppCompatActivity {
     private DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +71,11 @@ public class ShoppingList extends AppCompatActivity {
                     item.setItemKey(postSnapshot.getKey());
                     items.add(item);
                 }
-                arrayAdapter = new ShoppingListAdapter(items);
+                arrayAdapter = new ShoppingListAdapter(items, ShoppingList.this);
                 recyclerView.setAdapter(arrayAdapter);
+                amountTextView.setText("Na twojej liście znajduje się " +
+                        arrayAdapter.getItemCount() + " produktów");
+
             }
 
             @Override
@@ -77,6 +83,7 @@ public class ShoppingList extends AppCompatActivity {
 
             }
         });
+
 
 
         bottomNavigationView.setSelectedItemId(R.id.shopping_list);
@@ -99,8 +106,6 @@ public class ShoppingList extends AppCompatActivity {
             }
 
         });
-
-
 
 
         addItem.setOnClickListener(new View.OnClickListener() {
@@ -133,4 +138,8 @@ public class ShoppingList extends AppCompatActivity {
             };
 
 
+    @Override
+    public void itemClicked(int position) {
+        Toast.makeText(ShoppingList.this, String.valueOf(items.get(position).getName()), Toast.LENGTH_LONG).show();
+    }
 }

@@ -17,28 +17,39 @@ import java.util.ArrayList;
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
 
     private ArrayList<ItemModel> items;
+    private ItemClickedListener onItemClickListener;
 
-    public static class ShoppingListViewHolder extends RecyclerView.ViewHolder {
+    public static class ShoppingListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView itemName, itemUnit, itemAmount;
+        ItemClickedListener onItemClickListener;
 
-        public ShoppingListViewHolder(@NonNull View itemView) {
+        public ShoppingListViewHolder(@NonNull View itemView, ItemClickedListener onItemClickListener) {
             super(itemView);
             itemName = itemView.findViewById(R.id.textViewItemName);
             itemUnit = itemView.findViewById(R.id.textViewItemUnit);
             itemAmount = itemView.findViewById(R.id.textViewItemAmount);
+            this.onItemClickListener = onItemClickListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onItemClickListener.itemClicked(getAdapterPosition());
         }
     }
 
-    public ShoppingListAdapter(ArrayList<ItemModel> items) {
+    public ShoppingListAdapter(ArrayList<ItemModel> items, ItemClickedListener onItemClickListener) {
         this.items = items;
+        this.onItemClickListener = onItemClickListener;
+
     }
 
     @NonNull
     @Override
     public ShoppingListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.shopping_list_item, parent, false);
-        return new ShoppingListViewHolder(v);
+        return new ShoppingListViewHolder(v, onItemClickListener);
     }
 
 
@@ -54,6 +65,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface ItemClickedListener {
+        void itemClicked (int position);
     }
 
 }
