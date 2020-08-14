@@ -50,6 +50,7 @@ public class RecipesStep1 extends AppCompatActivity {
                     category.add(snack.getText().toString());
                 }
 
+                finish();
                 Intent intent = new Intent(RecipesStep1.this, RecipesStep2.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", recipeName.getText().toString());

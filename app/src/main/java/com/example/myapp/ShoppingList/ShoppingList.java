@@ -2,6 +2,7 @@ package com.example.myapp.ShoppingList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,20 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapp.Planner.Planner;
 import com.example.myapp.R;
-import com.example.myapp.Recipes.RecipeModel;
 import com.example.myapp.Recipes.Recipes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,14 +32,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ShoppingList extends AppCompatActivity implements ShoppingListAdapter.ItemClickedListener{
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
+public class ShoppingList extends AppCompatActivity implements IngredientAdapter.ItemClickedListener{
 
     private TextView amountTextView;
     private RecyclerView recyclerView;
-    private ShoppingListAdapter arrayAdapter;
+    private IngredientAdapter arrayAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addItem;
-    ArrayList<ItemModel> items;
+    ArrayList<IngredientModel> items;
     private DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
 
@@ -60,6 +63,8 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAdapt
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        //arrayAdapter.notifyDataSetChanged();
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -67,13 +72,22 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAdapt
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 items = new ArrayList<>();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    ItemModel item = postSnapshot.getValue(ItemModel.class);
+                    IngredientModel item = postSnapshot.getValue(IngredientModel.class);
+                    assert item != null;
                     item.setItemKey(postSnapshot.getKey());
                     items.add(item);
                 }
-                arrayAdapter = new ShoppingListAdapter(items, ShoppingList.this);
+                arrayAdapter = new IngredientAdapter(items, ShoppingList.this);
                 recyclerView.setAdapter(arrayAdapter);
-                amountTextView.setText("Na twojej liście znajduje się " +
+                if (arrayAdapter.getItemCount() == 0)
+                    amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
+                else if (arrayAdapter.getItemCount() == 1)
+                    amountTextView.setText("Na twojej liście znajduje się jeden produkt");
+                else if (arrayAdapter.getItemCount() > 1 && arrayAdapter.getItemCount() < 5)
+                    amountTextView.setText("Na twojej liście znajdują się " +
+                            arrayAdapter.getItemCount() + " produkty");
+                else
+                    amountTextView.setText("Na twojej liście znajduje się " +
                         arrayAdapter.getItemCount() + " produktów");
 
             }
@@ -127,13 +141,34 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAdapt
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    ItemModel selectedItem = items.get(viewHolder.getAdapterPosition());
-                    String selectedKey = selectedItem.getItemKey();
+                    final int position = viewHolder.getAdapterPosition();
+                    final IngredientModel selectedItem = items.get(viewHolder.getAdapterPosition());
+                    final String selectedKey = selectedItem.getItemKey();
                     databaseReference.child(selectedKey).removeValue();
                     items.remove(viewHolder.getAdapterPosition());
                     arrayAdapter.notifyDataSetChanged();
-
+                    Snackbar.make(recyclerView, "Czy na pewno chcesz usunąć produkt z listy?", Snackbar.LENGTH_LONG)
+                            .setAction("Cofnij", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    items.add(position, selectedItem);
+                                    arrayAdapter.notifyItemInserted(position);
+                                    databaseReference.child(selectedKey).setValue(selectedItem);
+                                }
+                            }).show();
                     //databaseReference.removeValue();
+                }
+
+                @Override
+                public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                        @NonNull RecyclerView.ViewHolder viewHolder, float dX,
+                                        float dY, int actionState, boolean isCurrentlyActive) {
+                    new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                            .addBackgroundColor(ContextCompat.getColor(ShoppingList.this, R.color.delete))
+                            .addActionIcon(R.drawable.ic_delete)
+                            .create()
+                            .decorate();
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
             };
 
@@ -141,5 +176,11 @@ public class ShoppingList extends AppCompatActivity implements ShoppingListAdapt
     @Override
     public void itemClicked(int position) {
         Toast.makeText(ShoppingList.this, String.valueOf(items.get(position).getName()), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(ShoppingList.this, EditIngredient.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("name", items.get(position).getName());
+        bundle.putString("key", items.get(position).getItemKey());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

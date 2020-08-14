@@ -36,12 +36,11 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        recipes = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        assert bundle != null;
         category = bundle.getString("category");
         Toast.makeText(DisplayRecipes.this, category, Toast.LENGTH_LONG).show();
 
@@ -49,8 +48,11 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                recipes = new ArrayList<>();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     RecipeModel recipeModel = postSnapshot.getValue(RecipeModel.class);
+                    assert recipeModel != null;
+                    recipeModel.setRecipeKey(postSnapshot.getKey());
                     switch (category) {
                         case "breakfast":
                             for (int i = 0; i < recipeModel.getCategory().size(); i++) {
@@ -104,11 +106,13 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         Bundle bundle = new Bundle();
         bundle.putString("name", recipes.get(position).getName());
         bundle.putString("image", recipes.get(position).getImageUrl());
-
-        // TODO dodać pozostałe elementy
-        // TODO wymyślić jak korzystać z jednego layoutu żeby wyświetlać śniadania, obiady i kolacje
-        //  - pomysł to żeby przesyłać z cardview cyfry i tak rozpoznawać
+        bundle.putStringArrayList("ingredients", recipes.get(position).getIngredients());
+        bundle.putString("description", recipes.get(position).getDescription());
+        bundle.putString("link", recipes.get(position).getLink());
+        bundle.putString("key", recipes.get(position).getRecipeKey());
         Toast.makeText(DisplayRecipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
+        // TODO dodać pozostałe elementy
+        // Toast.makeText(DisplayRecipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);
         startActivity(intent);
     }

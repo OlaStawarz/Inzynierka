@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Recipes.RecipesStep1">
 
-    <ImageView
-        android:id="@+id/imageViewFour"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/one"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <TextView
         android:id="@+id/textViewEnterName"
         android:layout_width="wrap_content"
@@ -25,16 +15,16 @@
         android:text="Wprowadź nazwę przepisu"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewFour" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="347dp"
+        android:layout_height="46dp"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Omlet bananowy"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="@+id/textViewEnterName"
         app:layout_constraintTop_toBottomOf="@+id/textViewEnterName" />
 

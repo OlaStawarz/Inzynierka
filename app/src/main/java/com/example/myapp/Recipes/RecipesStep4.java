@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
+import com.example.myapp.ShoppingList.IngredientModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -33,7 +36,7 @@ public class RecipesStep4 extends AppCompatActivity {
     DatabaseReference databaseReference;
     StorageReference storageReference;
 
-    ArrayList<String> category, ingredients;
+    ArrayList<String> category, ingredients, names, amounts, units;
     String name, description, link;
     ImageView image;
     Button buttonAddRecipe, buttonChooseFile;
@@ -57,8 +60,13 @@ public class RecipesStep4 extends AppCompatActivity {
         category = bundle.getStringArrayList("categoryNext");
         ingredients = bundle.getStringArrayList("ingredients");
         name = bundle.getString("nameNext");
-        description = bundle.getString("description");
-        link = bundle.getString("link");
+        names = bundle.getStringArrayList("names");
+        amounts = bundle.getStringArrayList("amounts");
+        units = bundle.getStringArrayList("units");
+
+        Toast.makeText(this, names.get(0) + amounts.get(0) + units.get(0), Toast.LENGTH_SHORT).show();
+        //description = bundle.getString("description");
+        //link = bundle.getString("link");
 
         buttonChooseFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,12 +122,28 @@ public class RecipesStep4 extends AppCompatActivity {
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
 
+                            ArrayList<IngredientModel> ingredientModels = new ArrayList<>();
+
+                            for (int i = 0; i < names.size(); i++) {
+                                IngredientModel ingredientModel = new IngredientModel(names.get(i),
+                                        Double.parseDouble(amounts.get(i)), units.get(i));
+                                ingredientModels.add(ingredientModel);
+
+                            }
+
                             //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
-                            recipeModel = new RecipeModel(name, category, ingredients, description, link, downloadUrl.toString());
+                            recipeModel = new RecipeModel(name, category, ingredients,
+                                    "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's " +
+                                            "standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to " +
+                                            "make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, " +
+                                            "remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum " +
+                                            "passages, and more recently with desktop publishing " +
+                                            "software like Aldus PageMaker including versions of Lorem Ipsum.", "Link", downloadUrl.toString(), ingredientModels);
 
                             String uploadId = databaseReference.push().getKey();
                             databaseReference.child(uploadId).setValue(recipeModel);
                             Toast.makeText(RecipesStep4.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

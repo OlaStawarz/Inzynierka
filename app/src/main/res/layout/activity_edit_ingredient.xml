@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShoppingList.AddItem">
+    tools:context=".ShoppingList.EditIngredient">
 
     <TextView
         android:id="@+id/textViewAddNameShoppingList"
@@ -60,19 +60,19 @@
 
     <Spinner
         android:id="@+id/spinnerEditUnit"
-        android:layout_width="86dp"
-        android:layout_height="31dp"
+        android:layout_width="179dp"
+        android:layout_height="42dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextEditAmount"
         app:layout_constraintEnd_toEndOf="@+id/textViewAddUnitShoppingList"
         app:layout_constraintTop_toTopOf="@+id/editTextEditAmount" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionBarAddItemShoppingList"
+    <Button
+        android:id="@+id/buttonEditIngredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_add"
+        android:text="Edytuj"
         app:layout_constraintEnd_toEndOf="@+id/spinnerEditUnit"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEditAmount" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerEditUnit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

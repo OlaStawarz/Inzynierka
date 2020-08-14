@@ -1,5 +1,8 @@
 package com.example.myapp.Recipes;
 
+import com.example.myapp.ShoppingList.IngredientModel;
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 
 public class RecipeModel {
@@ -10,18 +13,23 @@ public class RecipeModel {
     private String description;
     private String link;
     private String imageUrl;
+    private ArrayList<IngredientModel> ingredientModels;
+    private String recipeKey;
 
     public RecipeModel() {
 
     }
 
-    public RecipeModel(String name, ArrayList<String> category, ArrayList<String> ingredients, String description, String link, String imageUrl) {
+    public RecipeModel(String name, ArrayList<String> category, ArrayList<String> ingredients,
+                       String description, String link, String imageUrl,
+                       ArrayList<IngredientModel> ingredientModels) {
         this.name = name;
         this.category = category;
         this.ingredients = ingredients;
         this.description = description;
         this.link = link;
         this.imageUrl = imageUrl;
+        this.ingredientModels = ingredientModels;
     }
 
     public String getImageUrl() {
@@ -70,5 +78,23 @@ public class RecipeModel {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public ArrayList<IngredientModel> getIngredientModels() {
+        return ingredientModels;
+    }
+
+    public void setIngredientModels(ArrayList<IngredientModel> ingredientModels) {
+        this.ingredientModels = ingredientModels;
+    }
+
+    @Exclude
+    public String getRecipeKey() {
+        return recipeKey;
+    }
+
+    @Exclude
+    public void setRecipeKey(String recipeKey) {
+        this.recipeKey = recipeKey;
     }
 }

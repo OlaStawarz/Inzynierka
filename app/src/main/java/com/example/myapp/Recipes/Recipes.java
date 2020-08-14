@@ -22,11 +22,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class Recipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener{
+public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapter.OnHorizontalItemClickedListener{
 
     CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView;
     Intent intent;
@@ -34,7 +35,7 @@ public class Recipes extends AppCompatActivity implements RecipeAdapter.OnItemCl
     RecyclerView recyclerView;
     DatabaseReference databaseReference;
     ArrayList<RecipeModel> recipes;
-    RecipeAdapter recipeAdapter;
+    HorizontalRecipeAdapter recipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +52,25 @@ public class Recipes extends AppCompatActivity implements RecipeAdapter.OnItemCl
         recyclerView = findViewById(R.id.horizontal_recycler_view);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-        recipes = new ArrayList<>();
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(Recipes.this,
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        Query query = databaseReference.limitToLast(5);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                recipes = new ArrayList<>();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     RecipeModel recipeModel = postSnapshot.getValue(RecipeModel.class);
+                    assert recipeModel != null;
+                    recipeModel.setRecipeKey(postSnapshot.getKey());
                     recipes.add(recipeModel);
                 }
-                recipeAdapter = new RecipeAdapter(Recipes.this, recipes,
+                recipeAdapter = new HorizontalRecipeAdapter(Recipes.this, recipes,
                         Recipes.this);
                 recyclerView.setAdapter(recipeAdapter);
             }
@@ -146,13 +151,18 @@ public class Recipes extends AppCompatActivity implements RecipeAdapter.OnItemCl
         });
     }
 
+
     @Override
-    public void itemClicked(int position) {
+    public void horizontalItemClicked(int position) {
         Toast.makeText(Recipes.this, "Clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(Recipes.this, RecipeDetail.class);
         Bundle bundle = new Bundle();
         bundle.putString("name", recipes.get(position).getName());
         bundle.putString("image", recipes.get(position).getImageUrl());
+        bundle.putStringArrayList("ingredients", recipes.get(position).getIngredients());
+        bundle.putString("description", recipes.get(position).getDescription());
+        bundle.putString("link", recipes.get(position).getLink());
+        bundle.putString("key", recipes.get(position).getRecipeKey());
 
         Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);

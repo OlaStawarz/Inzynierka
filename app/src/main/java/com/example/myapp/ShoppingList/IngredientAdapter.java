@@ -1,22 +1,20 @@
 package com.example.myapp.ShoppingList;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp.R;
 
 import java.util.ArrayList;
 
-public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder> {
+public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ShoppingListViewHolder> {
 
-    private ArrayList<ItemModel> items;
+    private ArrayList<IngredientModel> items;
     private ItemClickedListener onItemClickListener;
 
     public static class ShoppingListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,7 +37,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
         }
     }
 
-    public ShoppingListAdapter(ArrayList<ItemModel> items, ItemClickedListener onItemClickListener) {
+    public IngredientAdapter(ArrayList<IngredientModel> items, ItemClickedListener onItemClickListener) {
         this.items = items;
         this.onItemClickListener = onItemClickListener;
 
@@ -55,7 +53,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ShoppingListViewHolder holder, int position) {
-        ItemModel currentItem = items.get(position);
+        IngredientModel currentItem = items.get(position);
 
         holder.itemName.setText(currentItem.getName());
         holder.itemAmount.setText(String.valueOf(currentItem.getAmount()));

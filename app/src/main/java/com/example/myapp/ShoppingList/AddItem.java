@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -27,7 +26,7 @@ public class AddItem extends AppCompatActivity {
     private Spinner unitSpinner;
     FloatingActionButton addItem;
     private DatabaseReference databaseReference;
-    ItemModel newItem, item;
+    IngredientModel newItem, item;
     private boolean updated = false;
     private ArrayList<String> names, keys;
     private ArrayList<Double> amounts;
@@ -37,9 +36,9 @@ public class AddItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        nameEditText = findViewById(R.id.editTextNameShoppingList);
-        amountEditText = findViewById(R.id.editTextAddAmountShoppingList);
-        unitSpinner = findViewById(R.id.spinnerAddUnitShoppingList);
+        nameEditText = findViewById(R.id.editTextEditName);
+        amountEditText = findViewById(R.id.editTextEditAmount);
+        unitSpinner = findViewById(R.id.spinnerEditUnit);
         addItem = findViewById(R.id.floatingActionBarAddItemShoppingList);
         addItemsToSpinner();
 
@@ -54,7 +53,7 @@ public class AddItem extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    item = postSnapshot.getValue(ItemModel.class);
+                    item = postSnapshot.getValue(IngredientModel.class);
                     item.setItemKey(postSnapshot.getKey());
                     //Toast.makeText(AddItem.this, item.getName(), Toast.LENGTH_LONG).show();
                     names.add(item.getName());
@@ -75,7 +74,7 @@ public class AddItem extends AppCompatActivity {
             public void onClick(View view) {
                 if (!nameEditText.getText().toString().isEmpty()
                         && !amountEditText.getText().toString().isEmpty()) {
-                    newItem = new ItemModel(nameEditText.getText().toString(),
+                    newItem = new IngredientModel(nameEditText.getText().toString(),
                             Double.parseDouble(amountEditText.getText().toString()),
                             unitSpinner.getSelectedItem().toString());
                     for (int i = 0; i < names.size(); i++) {

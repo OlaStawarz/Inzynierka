@@ -6,25 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".Recipes.RecipesStep2">
 
-    <ImageView
-        android:id="@+id/imageViewFour"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/two"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
-
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ingredientsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/editTextIngredient"
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButtonAdd" />
 
@@ -33,11 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="Wprowadź składniki"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewFour" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextIngredient"
@@ -54,20 +45,59 @@
         android:id="@+id/floatingActionButtonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="52dp"
         android:clickable="true"
         android:src="@drawable/ic_add"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextIngredient"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextIngredient"
-        app:layout_constraintTop_toTopOf="@+id/editTextIngredient" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextAmountRecipe" />
 
     <Button
         android:id="@+id/buttonNext2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:text="Dalej"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/ingredientsListView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Ilość"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@+id/editTextIngredient"
+        app:layout_constraintTop_toBottomOf="@+id/editTextIngredient" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jednostka"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/editTextAmountRecipe"
+        android:layout_width="66dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Spinner
+        android:id="@+id/spinnerUnitRecipe"
+        android:layout_width="197dp"
+        android:layout_height="33dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextAmountRecipe"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/editTextAmountRecipe" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,18 +2,18 @@ package com.example.myapp.ShoppingList;
 
 import com.google.firebase.database.Exclude;
 
-public class ItemModel {
+public class IngredientModel {
 
     private String itemName;
     private double amount;
     private String unit;
     private String itemKey;
 
-    public ItemModel() {
+    public IngredientModel() {
 
     }
 
-    public ItemModel(String name, double amount, String unit) {
+    public IngredientModel(String name, double amount, String unit) {
         this.itemName = name;
         this.amount = amount;
         this.unit = unit;

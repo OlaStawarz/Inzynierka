@@ -47,20 +47,20 @@ public class RecipesStep3 extends AppCompatActivity {
             }
         });*/
 
-       next.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent newIntent = new Intent(RecipesStep3.this, RecipesStep4.class);
-               Bundle newBundle = new Bundle();
-               newBundle.putStringArrayList("categoryNext", category);
-               newBundle.putStringArrayList("ingredients", ingredients);
-               newBundle.putString("nameNext", name);
-               newBundle.putString("description", description.getText().toString());
-               newBundle.putString("link", link.getText().toString());
-               newIntent.putExtras(newBundle);
-               startActivity(newIntent);
-           }
-       });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newIntent = new Intent(RecipesStep3.this, RecipesStep4.class);
+                Bundle newBundle = new Bundle();
+                newBundle.putStringArrayList("categoryNext", category);
+                newBundle.putStringArrayList("ingredients", ingredients);
+                newBundle.putString("nameNext", name);
+                newBundle.putString("description", description.getText().toString());
+                newBundle.putString("link", link.getText().toString());
+                newIntent.putExtras(newBundle);
+                startActivity(newIntent);
+            }
+        });
 
 
     }
