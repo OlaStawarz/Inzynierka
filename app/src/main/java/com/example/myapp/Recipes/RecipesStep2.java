@@ -108,7 +108,7 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
             @Override
             public void onClick(View view) {
                 finish();
-                Intent newIntent = new Intent(RecipesStep2.this, RecipesStep4.class);
+                Intent newIntent = new Intent(RecipesStep2.this, RecipesStep3.class);
                 Bundle newBundle = new Bundle();
                 newBundle.putStringArrayList("categoryNext", category);
                 newBundle.putStringArrayList("ingredients", ingredients);

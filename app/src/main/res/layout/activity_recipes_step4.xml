@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:text="Wybierz plik"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddImage" />
 
     <ImageView
         android:id="@+id/imageViewRecipe"
@@ -32,8 +32,30 @@
         android:id="@+id/buttonAddRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:text="Dodaj przepis"
         app:layout_constraintEnd_toEndOf="@+id/imageViewRecipe"
+        app:layout_constraintTop_toBottomOf="@+id/progressBarLoadImage" />
+
+    <TextView
+        android:id="@+id/textViewAddImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Dodaj zdjęcie przepisu"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBarLoadImage"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="348dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewRecipe"
+        app:layout_constraintStart_toStartOf="@+id/imageViewRecipe"
         app:layout_constraintTop_toBottomOf="@+id/imageViewRecipe" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

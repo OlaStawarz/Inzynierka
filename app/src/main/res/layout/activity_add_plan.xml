@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Planner.AddPlan">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textViewNumberOfDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Wybierz liczbę dni:"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinnerNumberOfDays"
+            android:layout_width="152dp"
+            android:layout_height="39dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewNumberOfDays"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewNumberOfDays"
+            app:layout_constraintTop_toTopOf="@+id/textViewNumberOfDays" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNumberOfDays">
+
+            <TextView
+                android:id="@+id/textViewDay1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 1"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginEnd="50dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay1">
+
+            <TextView
+                android:id="@+id/textViewDay2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 2"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay3"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintStart_toStartOf="@+id/cardViewDay1"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay1">
+
+            <TextView
+                android:id="@+id/textViewDay3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 3"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay4"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintStart_toStartOf="@+id/cardViewDay2"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay3">
+
+            <TextView
+                android:id="@+id/textViewDay4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 4"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay5"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintStart_toStartOf="@+id/cardViewDay1"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay3">
+
+            <TextView
+                android:id="@+id/textViewDay5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 5"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewDay6"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="25dp"
+            android:backgroundTint="#f2f0fa"
+            app:layout_constraintStart_toStartOf="@+id/cardViewDay4"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay5">
+
+            <TextView
+                android:id="@+id/textViewDay6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Dzień 6"
+                android:textSize="25sp" />
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/buttonSavePlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Zapisz"
+            app:layout_constraintEnd_toEndOf="@+id/cardViewDay6"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay6" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

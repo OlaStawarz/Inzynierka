@@ -20,7 +20,8 @@ public class DeleteRecipeFragment extends AppCompatDialogFragment {
         //return super.onCreateDialog(savedInstanceState);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Uwaga!")
-                .setMessage("Czy na pewno chcesz usunąć przepis?")
+                .setMessage("Przed usunięciem przepisu upewnij się, że nie znajduje się on" +
+                        " w ustalonym planie.")
                 .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

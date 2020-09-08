@@ -14,16 +14,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragment.DeleteListener{
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference, databaseReferencePlanner;
     private String key;
+    ArrayList<String> days = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +40,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         TextView textViewIngredients = findViewById(R.id.textViewDisplayIngredients);
         ImageView imageView = findViewById(R.id.imageViewRecipeImageDetail);
 
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
@@ -47,7 +49,9 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         String link = bundle.getString("link");
         ArrayList<String> ingredients = bundle.getStringArrayList("ingredients");
         key = bundle.getString("key");
+
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+        databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner");
 
        // Toast.makeText(RecipeDetail.this, description, Toast.LENGTH_LONG).show();
         textViewName.setText(name);
@@ -100,9 +104,72 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
 
     @Override
     public void confirm() {
+        // testowanie usuwanie klucza też z planera
+        databaseReferencePlanner.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-        databaseReference.removeValue();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    days.add(dataSnapshot.getKey());
+                }
+                for (int i = 0; i < days.size(); i++) {
+                    final int finalI = i;
+                    databaseReferencePlanner.child(days.get(i)).child("breakfast").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                //databaseReferencePlanner.child(days.get(finalI)).child("breakfast").child("key").removeValue();
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    databaseReferencePlanner.child(days.get(i)).child("dinner").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                //databaseReferencePlanner.child(days.get(finalI)).child("dinner").child("key").removeValue();
+                                //finish();
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    databaseReferencePlanner.child(days.get(i)).child("supper").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                //databaseReferencePlanner.child(days.get(finalI)).child("supper").child("key").removeValue();
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //databaseReference.removeValue();
         finish();
-        Toast.makeText(RecipeDetail.this, key, Toast.LENGTH_LONG).show();
+        //Toast.makeText(RecipeDetail.this, key, Toast.LENGTH_LONG).show();
     }
 }

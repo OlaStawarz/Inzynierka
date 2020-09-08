@@ -13,8 +13,11 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,11 +40,13 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class ShoppingList extends AppCompatActivity implements IngredientAdapter.ItemClickedListener{
 
     private TextView amountTextView;
+    private EditText searchItemEditText;
     private RecyclerView recyclerView;
     private IngredientAdapter arrayAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private FloatingActionButton addItem;
+    private FloatingActionButton addItem, deleteList;
     ArrayList<IngredientModel> items;
+    ArrayList<String> blabla;
     private DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
 
@@ -52,9 +57,12 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         setContentView(R.layout.activity_shopping_list);
 
         amountTextView = findViewById(R.id.textViewAmountOfItem);
+        searchItemEditText = findViewById(R.id.editTextSearchItem);
+        searchItemEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
         recyclerView = findViewById(R.id.recycler_view_shopping_list);
         recyclerView.setHasFixedSize(true);
         addItem = findViewById(R.id.floatingActionButtonShoppingList);
+        deleteList = findViewById(R.id.floatingActionButtonDeleteList);
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -63,8 +71,29 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //arrayAdapter.notifyDataSetChanged();
+        searchItemEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editable.toString();
+                ArrayList<IngredientModel> filteredList = new ArrayList<>();
+                for (IngredientModel item : items) {
+                    if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+                        filteredList.add(item);
+                    }
+                }
+                arrayAdapter.filterList(filteredList);
+            }
+        });
 
         databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -127,6 +156,13 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
             public void onClick(View view) {
                 Intent intent = new Intent(ShoppingList.this, AddItem.class);
                 startActivity(intent);
+            }
+        });
+
+        deleteList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseReference.removeValue();
             }
         });
     }

@@ -7,17 +7,6 @@
     tools:context=".ShoppingList.ShoppingList">
 
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lista zakupów"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -34,32 +23,59 @@
         android:id="@+id/floatingActionButtonShoppingList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_shopping_list"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAmountOfItem" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonDeleteList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_delete"
+        app:layout_constraintStart_toStartOf="@+id/recycler_view_shopping_list"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonShoppingList" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_shopping_list"
         android:layout_width="376dp"
         android:layout_height="445dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonShoppingList"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAmountOfItem" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextSearchItem" />
 
     <TextView
         android:id="@+id/textViewAmountOfItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="5dp"
         android:text="Ilość"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView3"
-        app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextSearchItem"
+        android:layout_width="376dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_shopping_list"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/recycler_view_shopping_list"
+        app:layout_constraintTop_toBottomOf="@+id/floatingActionButtonShoppingList" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

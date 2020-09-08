@@ -19,7 +19,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Przepisy"
+        android:layout_marginTop="10dp"
+        android:text="Ostatnio dodane"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Przekąski"
+            android:text="Inne"
             android:textSize="20sp"
             android:textStyle="bold" />
 

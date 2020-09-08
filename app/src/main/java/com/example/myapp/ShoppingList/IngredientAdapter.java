@@ -65,6 +65,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Sh
         return items.size();
     }
 
+    public void filterList(ArrayList<IngredientModel> filteredList) {
+        items = filteredList;
+        notifyDataSetChanged();
+    }
+
     public interface ItemClickedListener {
         void itemClicked (int position);
     }

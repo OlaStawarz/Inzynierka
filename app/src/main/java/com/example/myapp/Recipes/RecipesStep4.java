@@ -8,10 +8,12 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.myapp.R;
@@ -22,10 +24,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class RecipesStep4 extends AppCompatActivity {
     RecipeModel recipeModel;
     DatabaseReference databaseReference;
     StorageReference storageReference;
+    ProgressBar progressBar;
 
     ArrayList<String> category, ingredients, names, amounts, units;
     String name, description, link;
@@ -54,6 +56,7 @@ public class RecipesStep4 extends AppCompatActivity {
         image = findViewById(R.id.imageViewRecipe);
         buttonAddRecipe = findViewById(R.id.buttonAddRecipe);
         buttonChooseFile = findViewById(R.id.buttonChooseFile);
+        progressBar = findViewById(R.id.progressBarLoadImage);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -63,6 +66,10 @@ public class RecipesStep4 extends AppCompatActivity {
         names = bundle.getStringArrayList("names");
         amounts = bundle.getStringArrayList("amounts");
         units = bundle.getStringArrayList("units");
+        description = bundle.getString("description");
+        link = bundle.getString("link");
+        /*newBundle.putString("description", description.getText().toString());
+        newBundle.putString("link", link.getText().toString());*/
 
         Toast.makeText(this, names.get(0) + amounts.get(0) + units.get(0), Toast.LENGTH_SHORT).show();
         //description = bundle.getString("description");
@@ -118,6 +125,13 @@ public class RecipesStep4 extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBar.setProgress(0);
+                                }
+                            }, 500);
                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!urlTask.isSuccessful());
                             Uri downloadUrl = urlTask.getResult();
@@ -133,17 +147,20 @@ public class RecipesStep4 extends AppCompatActivity {
 
                             //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
                             recipeModel = new RecipeModel(name, category, ingredients,
-                                    "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's " +
-                                            "standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to " +
-                                            "make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, " +
-                                            "remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum " +
-                                            "passages, and more recently with desktop publishing " +
-                                            "software like Aldus PageMaker including versions of Lorem Ipsum.", "Link", downloadUrl.toString(), ingredientModels);
+                                    description, link, downloadUrl.toString(), ingredientModels);
 
                             String uploadId = databaseReference.push().getKey();
                             databaseReference.child(uploadId).setValue(recipeModel);
                             Toast.makeText(RecipesStep4.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
                             finish();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(RecipesStep4.this, "Dodawanie przepisu...", Toast.LENGTH_SHORT).show();
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressBar.setProgress((int) progress);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

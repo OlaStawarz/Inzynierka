@@ -8,6 +8,7 @@
 
 
     <TextView
+        android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Plan"
@@ -28,5 +29,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_naviagation" />
+
+    <TextView
+        android:id="@+id/textViewNoPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Uwtórz nowy plan"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <Button
+        android:id="@+id/buttonPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Planuj"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNoPlan" />
+
+    <TextView
+        android:id="@+id/textViewCurrentPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Zobacz aktualny plan"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewNoPlan"
+        app:layout_constraintStart_toStartOf="@+id/textViewNoPlan"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlan" />
+
+    <Button
+        android:id="@+id/buttonSeePlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Zobacz"
+        app:layout_constraintEnd_toEndOf="@+id/textViewCurrentPlan"
+        app:layout_constraintStart_toStartOf="@+id/textViewCurrentPlan"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentPlan" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
