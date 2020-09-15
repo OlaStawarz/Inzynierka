@@ -1,19 +1,28 @@
 package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
+import com.example.myapp.ShoppingList.IngredientAdapter;
+import com.example.myapp.ShoppingList.IngredientModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,55 +32,187 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragment.DeleteListener{
+public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragment.DeleteListener, IngredientAdapter.ItemClickedListener{
 
-    private DatabaseReference databaseReference, databaseReferencePlanner;
+    private static final int PICK_IMAGE_REQUEST = 2;
+    Uri imageUri;
+    private DatabaseReference databaseReference, databaseReferencePlanner, databaseReferenceIngredients;
     private String key;
+    IngredientAdapter arrayAdapter;
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
     ArrayList<String> days = new ArrayList<>();
+    ArrayList<IngredientModel> ingredients;
+    boolean isInPlanner = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        TextView textViewName = findViewById(R.id.textViewRecipeNameDetail);
-        TextView textViewDescription = findViewById(R.id.textViewDisplayDescription);
-        TextView textViewLink = findViewById(R.id.textViewDisplayLink);
-        TextView textViewIngredients = findViewById(R.id.textViewDisplayIngredients);
-        ImageView imageView = findViewById(R.id.imageViewRecipeImageDetail);
+        final TextView textViewName = findViewById(R.id.textViewRecipeNameDetail);
+        final TextView textViewDescription = findViewById(R.id.textViewDisplayDescription);
+        final TextView textViewLink = findViewById(R.id.textViewDisplayLink);
+        final ImageView imageView = findViewById(R.id.imageViewRecipeImageDetail);
+        recyclerView = findViewById(R.id.recycler_view_ingredients);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
-        String name = bundle.getString("name");
+        /*String name = bundle.getString("name");
         String imageUrl = bundle.getString("image");
         String description = bundle.getString("description");
-        String link = bundle.getString("link");
-        ArrayList<String> ingredients = bundle.getStringArrayList("ingredients");
+        String link = bundle.getString("link");*/
+        //final ArrayList<String> ingredients = bundle.getStringArrayList("ingredients");
         key = bundle.getString("key");
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
         databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner");
 
        // Toast.makeText(RecipeDetail.this, description, Toast.LENGTH_LONG).show();
-        textViewName.setText(name);
+        /*textViewName.setText(name);
         textViewDescription.setText(description);
-        textViewLink.setText(link);
-        String ingredient = "";
+        textViewLink.setText(link);*/
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    textViewName.setText(snapshot.child("name").getValue().toString());
+                    textViewDescription.setText(snapshot.child("description").getValue().toString());
+                    textViewLink.setText(snapshot.child("link").getValue().toString());
+                    Picasso.with(RecipeDetail.this)
+                            .load(snapshot.child("imageUrl").getValue().toString())
+                            .centerCrop()
+                            .fit()
+                            .into(imageView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReferenceIngredients = FirebaseDatabase.getInstance().getReference("Recipes")
+                .child(key).child("ingredientModels");
+
+        databaseReferenceIngredients.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    ingredients = new ArrayList<>();
+                    for (int i = 0; i < snapshot.getChildrenCount(); i++) {
+                        final String name = snapshot.child(String.valueOf(i))
+                                .child("name").getValue().toString();
+                        final double amount = Double.parseDouble(snapshot.child(String.valueOf(i))
+                                .child("amount").getValue().toString());
+                        final String unit = snapshot.child(String.valueOf(i))
+                                .child("unit").getValue().toString();
+                        //Toast.makeText(RecipeDetail.this, name, Toast.LENGTH_SHORT).show();
+                        IngredientModel item = new IngredientModel(name, amount, unit);
+                        ingredients.add(item);
+                    }
+                    arrayAdapter = new IngredientAdapter(ingredients, RecipeDetail.this);
+                    recyclerView.setAdapter(arrayAdapter);
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        /*String ingredient = "";
         for (int i = 0; i < ingredients.size(); i++) {
             ingredient += ingredients.get(i) + "\n";
         }
-        textViewIngredients.setText(ingredient);
-        Picasso.with(this)
+        textViewIngredients.setText(ingredient);*/
+        /*Picasso.with(this)
                 .load(imageUrl)
                 .centerCrop()
                 .fit()
-                .into(imageView);
+                .into(imageView);*/
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+       /* imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(RecipeDetail.this, "Edycja zdjęcia", Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+        databaseReferencePlanner.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    days.add(dataSnapshot.getKey());
+                }
+                for (int i = 0; i < days.size(); i++) {
+                    final int finalI = i;
+                    databaseReferencePlanner.child(days.get(i)).child("breakfast").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                isInPlanner = true;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    databaseReferencePlanner.child(days.get(i)).child("dinner").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                //
+                                //finish();
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                isInPlanner = true;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    databaseReferencePlanner.child(days.get(i)).child("supper").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String plannerKey = snapshot.child("key").getValue().toString();
+                            if (plannerKey.equals(key)) {
+                                //
+                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                isInPlanner = true;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            } }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -88,10 +229,16 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         switch (item.getItemId()) {
             case R.id.edit:
                 Toast.makeText(RecipeDetail.this, "Edycja", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(RecipeDetail.this, EditRecipe.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("key", key);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             case R.id.delete:
-                Toast.makeText(RecipeDetail.this, key, Toast.LENGTH_LONG).show();
+                Toast.makeText(RecipeDetail.this, "Usuwanie", Toast.LENGTH_LONG).show();
                 openDialog();
-                //databaseReference.child(key).removeValue();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -104,72 +251,49 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
 
     @Override
     public void confirm() {
+        if (!isInPlanner) {
+            Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+            databaseReference.removeValue();
+            finish();
+        } else {
+            Toast.makeText(this, "Nie można usunąć", Toast.LENGTH_SHORT).show();
+        }
         // testowanie usuwanie klucza też z planera
-        databaseReferencePlanner.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    days.add(dataSnapshot.getKey());
-                }
-                for (int i = 0; i < days.size(); i++) {
-                    final int finalI = i;
-                    databaseReferencePlanner.child(days.get(i)).child("breakfast").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String plannerKey = snapshot.child("key").getValue().toString();
-                            if (plannerKey.equals(key)) {
-                                //databaseReferencePlanner.child(days.get(finalI)).child("breakfast").child("key").removeValue();
-                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                    databaseReferencePlanner.child(days.get(i)).child("dinner").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String plannerKey = snapshot.child("key").getValue().toString();
-                            if (plannerKey.equals(key)) {
-                                //databaseReferencePlanner.child(days.get(finalI)).child("dinner").child("key").removeValue();
-                                //finish();
-                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                    databaseReferencePlanner.child(days.get(i)).child("supper").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String plannerKey = snapshot.child("key").getValue().toString();
-                            if (plannerKey.equals(key)) {
-                                //databaseReferencePlanner.child(days.get(finalI)).child("supper").child("key").removeValue();
-                                Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         //databaseReference.removeValue();
-        finish();
+        //finish();
         //Toast.makeText(RecipeDetail.this, key, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void itemClicked(int position) {
+
+    }
+
+    private void fileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            //image.setImageURI(imageUri);
+        }
+    }
+
+    private String getExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadImage() {
+
     }
 }

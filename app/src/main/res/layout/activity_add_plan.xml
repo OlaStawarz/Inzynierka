@@ -31,12 +31,12 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay1"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="50dp"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="50dp"
+            android:backgroundTint="#f5f5f5"
             app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNumberOfDays">
 
@@ -51,11 +51,11 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay2"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginEnd="50dp"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="40dp"
+            android:backgroundTint="#f5f5f5"
             app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cardViewDay1">
 
@@ -70,11 +70,11 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay3"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
+            android:backgroundTint="#f5f5f5"
             app:layout_constraintStart_toStartOf="@+id/cardViewDay1"
             app:layout_constraintTop_toBottomOf="@+id/cardViewDay1">
 
@@ -89,10 +89,10 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay4"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
             app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
+            android:backgroundTint="#f5f5f5"
             app:layout_constraintStart_toStartOf="@+id/cardViewDay2"
             app:layout_constraintTop_toTopOf="@+id/cardViewDay3">
 
@@ -105,51 +105,15 @@
                 android:textSize="25sp" />
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewDay5"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
-            app:layout_constraintStart_toStartOf="@+id/cardViewDay1"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewDay3">
-
-            <TextView
-                android:id="@+id/textViewDay5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Dzień 5"
-                android:textSize="25sp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewDay6"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            app:cardCornerRadius="25dp"
-            android:backgroundTint="#f2f0fa"
-            app:layout_constraintStart_toStartOf="@+id/cardViewDay4"
-            app:layout_constraintTop_toTopOf="@+id/cardViewDay5">
-
-            <TextView
-                android:id="@+id/textViewDay6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Dzień 6"
-                android:textSize="25sp" />
-        </androidx.cardview.widget.CardView>
-
         <Button
             android:id="@+id/buttonSavePlan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@drawable/round_button"
             android:text="Zapisz"
-            app:layout_constraintEnd_toEndOf="@+id/cardViewDay6"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewDay6" />
+            app:layout_constraintEnd_toEndOf="@+id/cardViewDay4"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

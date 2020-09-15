@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
-        android:text="Dodaj nazwę"
+        android:text="Edytuj nazwę"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:layout_height="42dp"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="@+id/textViewAddAmountShoppingList"
         app:layout_constraintTop_toBottomOf="@+id/textViewAddAmountShoppingList" />
 
@@ -71,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:background="@drawable/round_button"
         android:text="Edytuj"
         app:layout_constraintEnd_toEndOf="@+id/spinnerEditUnit"
         app:layout_constraintTop_toBottomOf="@+id/spinnerEditUnit" />

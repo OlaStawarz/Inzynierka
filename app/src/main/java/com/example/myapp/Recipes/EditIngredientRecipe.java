@@ -1,4 +1,4 @@
-package com.example.myapp.ShoppingList;
+package com.example.myapp.Recipes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,18 +12,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.myapp.R;
-import com.example.myapp.Recipes.RecipesStep2;
+import com.example.myapp.ShoppingList.EditIngredient;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class EditIngredient extends AppCompatActivity {
+public class EditIngredientRecipe extends AppCompatActivity {
 
     private EditText name, amount;
     private Spinner unit;
     private Button edit;
     private DatabaseReference databaseReference;
+    String position, key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +36,15 @@ public class EditIngredient extends AppCompatActivity {
         unit = findViewById(R.id.spinnerEditUnit);
         edit = findViewById(R.id.buttonEditIngredient);
         addItemsToSpinner();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
-        final String key = bundle.getString("key");
+        position = bundle.getString("position");
+        key = bundle.getString("key");
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key).child("ingredientModels");
+
+
         //Toast.makeText(EditIngredient.this, key, Toast.LENGTH_LONG).show();
         String itemName = bundle.getString("name");
         name.setText(itemName);
@@ -50,13 +53,15 @@ public class EditIngredient extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!name.getText().toString().isEmpty()) {
-                    databaseReference.child(key).child("name").setValue(name.getText().toString());
+                    Toast.makeText(EditIngredientRecipe.this, position, Toast.LENGTH_SHORT).show();
+                    assert position != null;
+                    databaseReference.child(position).child("name").setValue(name.getText().toString());
                 }
                 if (!amount.getText().toString().isEmpty()) {
-                    databaseReference.child(key).child("amount").setValue(Double.parseDouble(amount.getText().toString()));
+                    databaseReference.child(position).child("amount").setValue(Double.parseDouble(amount.getText().toString()));
                 }
                 if (!unit.getSelectedItem().toString().isEmpty()) {
-                    databaseReference.child(key).child("unit").setValue(unit.getSelectedItem().toString());
+                    databaseReference.child(position).child("unit").setValue(unit.getSelectedItem().toString());
                 }
                 finish();
             }
@@ -71,7 +76,7 @@ public class EditIngredient extends AppCompatActivity {
         units.add("łyżka");
         units.add("łyżeczka");
         units.add("szczypta");
-        unit.setAdapter(new ArrayAdapter<>(EditIngredient.this,
+        unit.setAdapter(new ArrayAdapter<>(EditIngredientRecipe.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }
 }

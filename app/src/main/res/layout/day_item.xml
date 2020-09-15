@@ -4,9 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="15dp"
-    android:backgroundTint="#fff7f8"
+    android:backgroundTint="#f5f5f5"
     android:padding="20dp"
-
     android:layout_margin="15dp">
 
     <TextView
@@ -15,8 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="aaa"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_margin="12dp"
         android:textSize="25sp"
         android:textStyle="bold" />
 

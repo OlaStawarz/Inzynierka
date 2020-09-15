@@ -2,11 +2,13 @@ package com.example.myapp.Planner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +28,12 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
     RecyclerView recyclerView;
     ArrayList<DayModel> arrayList;
     HorizontalDaysAdapter daysAdapter;
-    TextView textView, textViewBreakfast, textViewDinner, textViewSupper;
+    TextView textViewBreakfast, textViewDinner, textViewSupper, textViewBreakfastTitle,
+            textViewDinnerTitle, textViewSupperTitle, isPlanExist;
+    CardView breakfast, dinner, supper;
     ImageView imageViewBreakfast, imageViewDinner, imageViewSupper;
     DatabaseReference recipeDatabaseReference, databaseReference, databaseReferenceBreakfast,
-                        databaseReferenceDinner, databaseReferenceSupper;
+                        databaseReferenceDinner, databaseReferenceSupper, databaseReferenceT;
     String[] daysNumbers;
 
     @Override
@@ -44,7 +48,47 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         imageViewBreakfast = findViewById(R.id.imageViewPlannerBreakfast);
         imageViewDinner = findViewById(R.id.imageViewPlannerDinner);
         imageViewSupper = findViewById(R.id.imageViewPlannerSupper);
+        textViewBreakfastTitle = findViewById(R.id.textViewChosenBreakfast);
+        textViewDinnerTitle = findViewById(R.id.textViewChosenDinner);
+        textViewSupperTitle = findViewById(R.id.textViewChosenSupper);
+        isPlanExist = findViewById(R.id.textViewIfPlanExist);
+        breakfast = findViewById(R.id.cardViewAddBreakfast);
+        dinner = findViewById(R.id.cardViewAddDinner);
+        supper = findViewById(R.id.cardViewAddSupper);
 
+        databaseReferenceT = FirebaseDatabase.getInstance().getReference("Planner");
+        databaseReferenceT.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    isPlanExist.setText("Ustalony plan posiłków");
+                    Toast.makeText(ShowPlan.this, "jest", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShowPlan.this, "nie jest", Toast.LENGTH_SHORT).show();
+                    isPlanExist.setText("Obecnie nie posiadasz żadnego planu.");
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    textViewBreakfast.setVisibility(View.INVISIBLE);
+                    textViewDinner.setVisibility(View.INVISIBLE);
+                    textViewSupper.setVisibility(View.INVISIBLE);
+                    breakfast.setVisibility(View.INVISIBLE);
+                    dinner.setVisibility(View.INVISIBLE);
+                    supper.setVisibility(View.INVISIBLE);
+                    textViewBreakfast.setVisibility(View.INVISIBLE);
+                    textViewDinner.setVisibility(View.INVISIBLE);
+                    textViewSupper.setVisibility(View.INVISIBLE);
+                    imageViewBreakfast.setVisibility(View.INVISIBLE);
+                    imageViewDinner.setVisibility(View.INVISIBLE);
+                    imageViewSupper.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // show first day when open activity
         databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("breakfast");
         databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("dinner");
         databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("supper");
@@ -52,26 +96,29 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String key = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewBreakfast.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewBreakfast);
-                    }
+                if (snapshot.exists()) {
+                    String key = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewBreakfast.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewBreakfast);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -83,26 +130,29 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceSupper.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String key = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewSupper.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewSupper);
-                    }
+                if (snapshot.exists()) {
+                    String key = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSupper.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSupper);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -114,26 +164,29 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceDinner.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String key = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewDinner.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewDinner);
-                    }
+                if (snapshot.exists()) {
+                    String key = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewDinner.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewDinner);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -142,9 +195,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        //String[] daysNumbers = new String[]{"Dzień 1", "Dzień 2", "Dzień 3", "Dzień 4"};
-
-
+        // show plan from another days
         databaseReference = FirebaseDatabase.getInstance().getReference("Planner");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -190,9 +241,6 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
 
             }
         });
-
-
-
     }
 
     @Override

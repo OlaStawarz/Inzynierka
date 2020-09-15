@@ -91,19 +91,6 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
             }
         });
 
-        /*next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newIntent = new Intent(RecipesStep2.this, RecipesStep3.class);
-                Bundle newBundle = new Bundle();
-                newBundle.putStringArrayList("categoryNext", category);
-                newBundle.putStringArrayList("ingredients", ingredients);
-                newBundle.putString("nameNext", name);
-                newIntent.putExtras(newBundle);
-                startActivity(newIntent);
-            }
-        });*/
-
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +111,11 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
     private void addItemsToSpinner() {
         ArrayList<String> units = new ArrayList<>();
         units.add("kg");
+        units.add("g");
         units.add("sztuka");
+        units.add("łyżka");
+        units.add("łyżeczka");
+        units.add("szczypta");
         spinnerUnit.setAdapter(new ArrayAdapter<>(RecipesStep2.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }

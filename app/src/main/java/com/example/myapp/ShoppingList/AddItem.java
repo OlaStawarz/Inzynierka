@@ -101,7 +101,11 @@ public class AddItem extends AppCompatActivity {
     private void addItemsToSpinner() {
         ArrayList<String> units = new ArrayList<>();
         units.add("kg");
+        units.add("g");
         units.add("sztuka");
+        units.add("łyżka");
+        units.add("łyżeczka");
+        units.add("szczypta");
         unitSpinner.setAdapter(new ArrayAdapter<>(AddItem.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }

@@ -10,32 +10,30 @@
         android:id="@+id/horizontal_recycler_view"
         android:layout_width="350dp"
         android:layout_height="157dp"
-        app:layout_constraintBottom_toTopOf="@+id/breakfast_card_view"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewRecentlyAdded" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewRecentlyAdded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Ostatnio dodane"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/breakfast_card_view"
         android:layout_width="150dp"
         android:layout_height="80dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="10dp"
         app:cardCornerRadius="8sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSearchByCateghory">
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,9 +50,8 @@
         android:id="@+id/dinner_card_view"
         android:layout_width="150dp"
         android:layout_height="80dp"
-        android:layout_marginEnd="35dp"
         app:cardCornerRadius="8sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/horizontal_recycler_view"
         app:layout_constraintTop_toTopOf="@+id/breakfast_card_view">
 
         <TextView
@@ -90,7 +87,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/snacks_card_view"
+        android:id="@+id/snack_card_view"
         android:layout_width="150dp"
         android:layout_height="80dp"
         app:cardCornerRadius="8sp"
@@ -103,6 +100,27 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Inne"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/all_recipes_card_view"
+        android:layout_width="350dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="8sp"
+        app:layout_constraintEnd_toEndOf="@+id/snack_card_view"
+        app:layout_constraintStart_toStartOf="@+id/supper_card_view"
+        app:layout_constraintTop_toBottomOf="@+id/supper_card_view">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Wszystkie przepisy"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -129,7 +147,18 @@
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="@+id/snacks_card_view"
+        app:layout_constraintEnd_toEndOf="@+id/snack_card_view"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/textViewSearchByCateghory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Przeglądaj według kategorii"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/horizontal_recycler_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

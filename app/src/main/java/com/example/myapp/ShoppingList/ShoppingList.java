@@ -211,7 +211,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
 
     @Override
     public void itemClicked(int position) {
-        Toast.makeText(ShoppingList.this, String.valueOf(items.get(position).getName()), Toast.LENGTH_LONG).show();
+        //Toast.makeText(ShoppingList.this, String.valueOf(items.get(position).getName()), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(ShoppingList.this, EditIngredient.class);
         Bundle bundle = new Bundle();
         bundle.putString("name", items.get(position).getName());

@@ -28,6 +28,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class RecipesStep4 extends AppCompatActivity {
@@ -71,7 +72,7 @@ public class RecipesStep4 extends AppCompatActivity {
         /*newBundle.putString("description", description.getText().toString());
         newBundle.putString("link", link.getText().toString());*/
 
-        Toast.makeText(this, names.get(0) + amounts.get(0) + units.get(0), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, names.get(0) + amounts.get(0) + units.get(0), Toast.LENGTH_SHORT).show();
         //description = bundle.getString("description");
         //link = bundle.getString("link");
 
@@ -117,59 +118,63 @@ public class RecipesStep4 extends AppCompatActivity {
 
     private void uploadImage() {
 
-        if (imageUri != null) {
-            StorageReference fileReference = storageReference.child(System.currentTimeMillis()
-                    + "." + getExtension(imageUri));
-
-            fileReference.putFile(imageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressBar.setProgress(0);
-                                }
-                            }, 500);
-                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!urlTask.isSuccessful());
-                            Uri downloadUrl = urlTask.getResult();
-
-                            ArrayList<IngredientModel> ingredientModels = new ArrayList<>();
-
-                            for (int i = 0; i < names.size(); i++) {
-                                IngredientModel ingredientModel = new IngredientModel(names.get(i),
-                                        Double.parseDouble(amounts.get(i)), units.get(i));
-                                ingredientModels.add(ingredientModel);
-
-                            }
-
-                            //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
-                            recipeModel = new RecipeModel(name, category, ingredients,
-                                    description, link, downloadUrl.toString(), ingredientModels);
-
-                            String uploadId = databaseReference.push().getKey();
-                            databaseReference.child(uploadId).setValue(recipeModel);
-                            Toast.makeText(RecipesStep4.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
-                            finish();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(RecipesStep4.this, "Dodawanie przepisu...", Toast.LENGTH_SHORT).show();
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            progressBar.setProgress((int) progress);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RecipesStep4.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+        if (imageUri == null) {
+            imageUri = Uri.parse(("android.resource://" + getApplicationContext().getPackageName() + "/drawable/no_photo"));
+            image.setImageURI(imageUri);
         }
+        StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                + "." + getExtension(imageUri));
+
+        fileReference.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setProgress(0);
+                            }
+                        }, 500);
+                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!urlTask.isSuccessful());
+                        Uri downloadUrl = urlTask.getResult();
+
+                        ArrayList<IngredientModel> ingredientModels = new ArrayList<>();
+
+                        for (int i = 0; i < names.size(); i++) {
+                            IngredientModel ingredientModel = new IngredientModel(names.get(i),
+                                    Double.parseDouble(amounts.get(i)), units.get(i));
+                            ingredientModels.add(ingredientModel);
+
+                        }
+                        if (description.isEmpty()) {
+                            description = "---";
+                        }
+                        //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
+                        recipeModel = new RecipeModel(name, category, ingredients,
+                                description, link, downloadUrl.toString(), ingredientModels);
+
+                        String uploadId = databaseReference.push().getKey();
+                        databaseReference.child(uploadId).setValue(recipeModel);
+                        Toast.makeText(RecipesStep4.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(RecipesStep4.this, "Dodawanie przepisu...", Toast.LENGTH_LONG).show();
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        progressBar.setProgress((int) progress);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RecipesStep4.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
 

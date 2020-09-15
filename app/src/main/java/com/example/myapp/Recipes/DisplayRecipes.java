@@ -2,11 +2,16 @@ package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
@@ -19,21 +24,26 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener {
+public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener,
+        RecipeAdapter.OnFavouriteButtonClickListener {
 
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
-
+    private EditText searchRecipeEditText;
     private DatabaseReference databaseReference;
     private List<RecipeModel> recipes;
+    private ImageView imageViewFavourite;
     String category;
+    boolean isFavourite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_recipes);
 
+        searchRecipeEditText = findViewById(R.id.editTextSearchRecipe);
         recyclerView = findViewById(R.id.recycler_view);
+        imageViewFavourite = findViewById(R.id.imageViewAddToFavourite);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
@@ -42,8 +52,32 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         Bundle bundle = intent.getExtras();
         assert bundle != null;
         category = bundle.getString("category");
-        Toast.makeText(DisplayRecipes.this, category, Toast.LENGTH_LONG).show();
+        //Toast.makeText(DisplayRecipes.this, category, Toast.LENGTH_LONG).show();
 
+        searchRecipeEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
+        searchRecipeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editable.toString();
+                ArrayList<RecipeModel> filteredList = new ArrayList<>();
+                for (RecipeModel recipe : recipes) {
+                    if (recipe.getName().toLowerCase().contains(text.toLowerCase())) {
+                        filteredList.add(recipe);
+                    }
+                }
+                recipeAdapter.filterRecipeList(filteredList);
+            }
+        });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -82,11 +116,15 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
                                 }
                             }
                             break;
+                        case "all":
+                            for (int i = 0; i < recipeModel.getCategory().size(); i++) {
+                                recipes.add(recipeModel);
+                            }
                     }
 
                 }
                 recipeAdapter = new RecipeAdapter(DisplayRecipes.this, recipes,
-                        DisplayRecipes.this);
+                        DisplayRecipes.this, DisplayRecipes.this);
                 recyclerView.setAdapter(recipeAdapter);
             }
 
@@ -110,10 +148,22 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         bundle.putString("description", recipes.get(position).getDescription());
         bundle.putString("link", recipes.get(position).getLink());
         bundle.putString("key", recipes.get(position).getRecipeKey());
-        Toast.makeText(DisplayRecipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
-        // TODO dodać pozostałe elementy
-        // Toast.makeText(DisplayRecipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void addToFavourite(int position) {
+        Toast.makeText(this, "do ulubionych", Toast.LENGTH_SHORT).show();
+        /*if (!isFavourite) {
+            imageViewFavourite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favorite));
+            isFavourite = true;
+        } else {
+            imageViewFavourite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favorite_add));
+            isFavourite = false;
+        }*/
+
+
+
     }
 }

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapter.OnHorizontalItemClickedListener{
 
-    CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView;
+    CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView, allRecipesCardView;
     Intent intent;
     Bundle bundle;
     RecyclerView recyclerView;
@@ -48,11 +48,11 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
         breakfastCardView = findViewById(R.id.breakfast_card_view);
         dinnerCardView = findViewById(R.id.dinner_card_view);
         supperCardView = findViewById(R.id.supper_card_view);
-        snackCardView = findViewById(R.id.snacks_card_view);
+        snackCardView = findViewById(R.id.snack_card_view);
+        allRecipesCardView = findViewById(R.id.all_recipes_card_view);
         recyclerView = findViewById(R.id.horizontal_recycler_view);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(Recipes.this,
                 LinearLayoutManager.HORIZONTAL, false);
@@ -108,7 +108,7 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
         addRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Recipes.this, "Clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Recipes.this, "Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Recipes.this, RecipesStep1.class);
                 startActivity(intent);
             }
@@ -149,6 +149,15 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
                 startActivity(intent);
             }
         });
+
+        allRecipesCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString("category", "all");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -164,7 +173,7 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
         bundle.putString("link", recipes.get(position).getLink());
         bundle.putString("key", recipes.get(position).getRecipeKey());
 
-        Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);
         startActivity(intent);
     }

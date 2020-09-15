@@ -20,6 +20,7 @@ import com.example.myapp.Recipes.RecipeModel;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipePlannerAdapter extends RecyclerView.Adapter<RecipePlannerAdapter.RecipePlannerViewHolder> {
@@ -48,7 +49,7 @@ public class RecipePlannerAdapter extends RecyclerView.Adapter<RecipePlannerAdap
                 .load(recipeModel.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .fit()
-                .centerCrop()
+                //.centerCrop()
                 .into(holder.imageView);
 
         /*holder.btnShowDetail.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,11 @@ public class RecipePlannerAdapter extends RecyclerView.Adapter<RecipePlannerAdap
     @Override
     public int getItemCount() {
         return recipes.size();
+    }
+
+    public void filterRecipeListPlanner(ArrayList<RecipeModel> filteredRecipes) {
+        recipes = filteredRecipes;
+        notifyDataSetChanged();
     }
 
     public static class RecipePlannerViewHolder extends RecyclerView.ViewHolder  {

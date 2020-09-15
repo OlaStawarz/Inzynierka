@@ -60,8 +60,9 @@
 
     <Spinner
         android:id="@+id/spinnerEditUnit"
-        android:layout_width="86dp"
-        android:layout_height="31dp"
+        android:layout_width="134dp"
+        android:layout_height="41dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextEditAmount"
         app:layout_constraintEnd_toEndOf="@+id/textViewAddUnitShoppingList"
         app:layout_constraintTop_toTopOf="@+id/editTextEditAmount" />
 

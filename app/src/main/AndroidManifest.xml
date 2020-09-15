@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Recipes.EditIngredientRecipe"></activity>
+        <activity android:name=".Recipes.EditRecipe" />
         <activity android:name=".Planner.ShowPlan" />
         <activity android:name=".Planner.ChooseMeal" />
         <activity android:name=".Planner.PlannerDay" />
@@ -16,19 +18,20 @@
         <activity android:name=".Recipes.AddRecipe" />
         <activity android:name=".ShoppingList.EditIngredient" />
         <activity android:name=".ShoppingList.AddItem" />
-        <activity
-            android:name=".Recipes.RecipeDetail"
-            android:parentActivityName=".Recipes.Recipes" />
+        <activity android:name=".Recipes.RecipeDetail" />
         <activity
             android:name=".Recipes.DisplayRecipes"
             android:parentActivityName=".Recipes.Recipes" />
         <activity android:name=".Recipes.RecipesStep4" />
         <activity android:name=".Recipes.RecipesStep3" />
-        <activity android:name=".Recipes.RecipesStep2" />
+        <activity
+            android:name=".Recipes.RecipesStep2"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Recipes.RecipesStep1" />
         <activity android:name=".Recipes.Recipes" />
-        <activity android:name=".ShoppingList.ShoppingList"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".ShoppingList.ShoppingList"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Planner.Planner" />
         <activity android:name=".MainActivity">
             <intent-filter>

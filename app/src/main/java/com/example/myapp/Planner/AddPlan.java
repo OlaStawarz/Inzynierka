@@ -23,19 +23,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddPlan extends AppCompatActivity {
 
-    //String updatedKey;
-    //Double newAmount;
     private Spinner spinnerDays;
-    private CardView day1, day2, day3, day4, day5, day6;
+    private CardView day1, day2, day3, day4;
     private Button savePlan;
     private Intent intent;
     private Bundle bundle;
     private DatabaseReference databaseReferencePlanner, databaseReferenceRecipe,
             databaseReferenceShoppingList;
-    private ArrayList<String> names, keys, existingNames;
+    private ArrayList<String> names, keys, units;
     private ArrayList<Double> amounts, blaA;
     IngredientModel newItem, item;
     boolean updatedSupper = false, updatedDinner = false, updatedBreakfast = false;
@@ -50,10 +49,7 @@ public class AddPlan extends AppCompatActivity {
         day2 = findViewById(R.id.cardViewDay2);
         day3 = findViewById(R.id.cardViewDay3);
         day4 = findViewById(R.id.cardViewDay4);
-        day5 = findViewById(R.id.cardViewDay5);
-        day6 = findViewById(R.id.cardViewDay6);
         savePlan = findViewById(R.id.buttonSavePlan);
-
 
         databaseReferenceRecipe = FirebaseDatabase.getInstance().getReference("Recipes");
         databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner");
@@ -62,6 +58,7 @@ public class AddPlan extends AppCompatActivity {
         names = new ArrayList<>();
         keys = new ArrayList<>();
         amounts = new ArrayList<>();
+        units = new ArrayList<>();
         databaseReferenceShoppingList.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -71,6 +68,7 @@ public class AddPlan extends AppCompatActivity {
                     names.add(item.getName());
                     keys.add(item.getItemKey());
                     amounts.add(item.getAmount());
+                    units.add(item.getUnit());
                 }
             }
 
@@ -122,29 +120,8 @@ public class AddPlan extends AppCompatActivity {
             }
         });
 
-        day5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bundle.putString("day", "day5");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-        day6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bundle.putString("day", "day6");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
 
         final ArrayList<String> days = new ArrayList<>();
-        /*names = new ArrayList<>();
-        keys = new ArrayList<>();
-        amounts = new ArrayList<>();
-        existingNames = new ArrayList<>();*/
         savePlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +136,8 @@ public class AddPlan extends AppCompatActivity {
                             databaseReferencePlanner.child(days.get(i)).child("breakfast").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String key = snapshot.child("key").getValue().toString();
+                                    if (snapshot.exists()) {
+                                    String key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                                     databaseReferenceRecipe = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
                                     databaseReferenceRecipe.addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -171,7 +149,7 @@ public class AddPlan extends AppCompatActivity {
                                                         .child("amount").getValue().toString());
                                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                                         .child("unit").getValue().toString();
-                                                if (names.contains(name)) {
+                                                if (names.contains(name) && unit.equals(units.get(names.indexOf(name)))) {
                                                     Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
                                                     int index = names.indexOf(name);
                                                     Toast.makeText(AddPlan.this, names.get(index) + keys.get(index), Toast.LENGTH_SHORT).show();
@@ -185,30 +163,8 @@ public class AddPlan extends AppCompatActivity {
                                                     names.add(name);
                                                     amounts.add(amount);
                                                     keys.add(uploadId);
+                                                    units.add(unit);
                                                 }
-
-                                                /*databaseReferenceShoppingList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for (DataSnapshot data : snapshot.getChildren()) {
-                                                            if (data.child("name").getValue().toString().equals(name)) {
-                                                                Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
-                                                                Toast.makeText(AddPlan.this, " ", Toast.LENGTH_SHORT).show();
-                                                                newAmount = amount + Double.parseDouble(data.child("amount").getValue().toString());
-                                                                databaseReferenceShoppingList.child(data.getKey()).child("amount").setValue(newAmount);
-                                                            } else {
-                                                                IngredientModel ingredientModel = new IngredientModel(name, amount, unit);
-                                                                String uploadId = databaseReferenceShoppingList.push().getKey();
-                                                                databaseReferenceShoppingList.child(uploadId).setValue(ingredientModel);
-                                                            }
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });*/
                                             }
 
                                         }
@@ -218,7 +174,7 @@ public class AddPlan extends AppCompatActivity {
 
                                         }
                                     });
-                                }
+                                }}
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -228,7 +184,8 @@ public class AddPlan extends AppCompatActivity {
                             databaseReferencePlanner.child(days.get(i)).child("dinner").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String key = snapshot.child("key").getValue().toString();
+                                    if (snapshot.exists()) {
+                                    String key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                                     databaseReferenceRecipe = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
                                     databaseReferenceRecipe.addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -240,7 +197,7 @@ public class AddPlan extends AppCompatActivity {
                                                         .child("amount").getValue().toString());
                                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                                         .child("unit").getValue().toString();
-                                                if (names.contains(name)) {
+                                                if (names.contains(name) && unit.equals(units.get(names.indexOf(name)))) {
                                                     Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
                                                     int index = names.indexOf(name);
                                                     Toast.makeText(AddPlan.this, names.get(index) + keys.get(index), Toast.LENGTH_SHORT).show();
@@ -254,29 +211,9 @@ public class AddPlan extends AppCompatActivity {
                                                     names.add(name);
                                                     amounts.add(amount);
                                                     keys.add(uploadId);
+                                                    units.add(unit);
                                                 }
-                                                /*databaseReferenceShoppingList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for (DataSnapshot data : snapshot.getChildren()) {
-                                                            if (data.child("name").getValue().toString().equals(name)) {
-                                                                Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
-                                                                Toast.makeText(AddPlan.this, " ", Toast.LENGTH_SHORT).show();
-                                                                newAmount = amount + Double.parseDouble(data.child("amount").getValue().toString());
-                                                                databaseReferenceShoppingList.child(data.getKey()).child("amount").setValue(newAmount);
-                                                            } else {
-
-                                                            }
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });*/
                                             }
-
                                         }
 
                                         @Override
@@ -284,7 +221,7 @@ public class AddPlan extends AppCompatActivity {
 
                                         }
                                     });
-                                }
+                                } }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -294,7 +231,8 @@ public class AddPlan extends AppCompatActivity {
                             databaseReferencePlanner.child(days.get(i)).child("supper").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String key = snapshot.child("key").getValue().toString();
+                                    if (snapshot.exists()) {
+                                    String key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                                     databaseReferenceRecipe = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
 
                                     databaseReferenceRecipe.addValueEventListener(new ValueEventListener() {
@@ -307,7 +245,7 @@ public class AddPlan extends AppCompatActivity {
                                                         .child("amount").getValue().toString());
                                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                                         .child("unit").getValue().toString();
-                                                if (names.contains(name)) {
+                                                if (names.contains(name) && unit.equals(units.get(names.indexOf(name)))) {
                                                     Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
                                                     int index = names.indexOf(name);
                                                     Toast.makeText(AddPlan.this, names.get(index) + keys.get(index), Toast.LENGTH_SHORT).show();
@@ -321,27 +259,8 @@ public class AddPlan extends AppCompatActivity {
                                                     names.add(name);
                                                     amounts.add(amount);
                                                     keys.add(uploadId);
+                                                    units.add(unit);
                                                 }
-                                                /*databaseReferenceShoppingList.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for (DataSnapshot data : snapshot.getChildren()) {
-                                                            if (data.child("name").getValue().toString().equals(name)) {
-                                                                Toast.makeText(AddPlan.this, "juz jest", Toast.LENGTH_SHORT).show();
-                                                                Toast.makeText(AddPlan.this, " ", Toast.LENGTH_SHORT).show();
-                                                                newAmount = amount + Double.parseDouble(data.child("amount").getValue().toString());
-                                                                databaseReferenceShoppingList.child(data.getKey()).child("amount").setValue(newAmount);
-                                                            } else {
-
-                                                            }
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });*/
                                             }
                                         }
 
@@ -350,7 +269,7 @@ public class AddPlan extends AppCompatActivity {
 
                                         }
                                     });
-                                }
+                                } }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -383,48 +302,24 @@ public class AddPlan extends AppCompatActivity {
                         day2.setVisibility(View.INVISIBLE);
                         day3.setVisibility(View.INVISIBLE);
                         day4.setVisibility(View.INVISIBLE);
-                        day5.setVisibility(View.INVISIBLE);
-                        day6.setVisibility(View.INVISIBLE);
                         break;
                     case 1:
                         day1.setVisibility(View.VISIBLE);
                         day2.setVisibility(View.VISIBLE);
                         day3.setVisibility(View.INVISIBLE);
                         day4.setVisibility(View.INVISIBLE);
-                        day5.setVisibility(View.INVISIBLE);
-                        day6.setVisibility(View.INVISIBLE);
                         break;
                     case 2:
                         day1.setVisibility(View.VISIBLE);
                         day2.setVisibility(View.VISIBLE);
                         day3.setVisibility(View.VISIBLE);
                         day4.setVisibility(View.INVISIBLE);
-                        day5.setVisibility(View.INVISIBLE);
-                        day6.setVisibility(View.INVISIBLE);
                         break;
                     case 3:
                         day1.setVisibility(View.VISIBLE);
                         day2.setVisibility(View.VISIBLE);
                         day3.setVisibility(View.VISIBLE);
                         day4.setVisibility(View.VISIBLE);
-                        day5.setVisibility(View.INVISIBLE);
-                        day6.setVisibility(View.INVISIBLE);
-                        break;
-                    case 4:
-                        day1.setVisibility(View.VISIBLE);
-                        day2.setVisibility(View.VISIBLE);
-                        day3.setVisibility(View.VISIBLE);
-                        day4.setVisibility(View.VISIBLE);
-                        day5.setVisibility(View.VISIBLE);
-                        day6.setVisibility(View.INVISIBLE);
-                        break;
-                    case 5:
-                        day1.setVisibility(View.VISIBLE);
-                        day2.setVisibility(View.VISIBLE);
-                        day3.setVisibility(View.VISIBLE);
-                        day4.setVisibility(View.VISIBLE);
-                        day5.setVisibility(View.VISIBLE);
-                        day6.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -442,8 +337,6 @@ public class AddPlan extends AppCompatActivity {
         units.add(2);
         units.add(3);
         units.add(4);
-        units.add(5);
-        units.add(6);
         spinner.setAdapter(new ArrayAdapter<>(AddPlan.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }

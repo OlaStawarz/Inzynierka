@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class PlannerDay extends AppCompatActivity {
         dinnerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("dinner");
         supperDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("supper");
 
+
         ValueEventListener breakfastEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -107,7 +109,7 @@ public class PlannerDay extends AppCompatActivity {
                 if(snapshot.exists()) {
                     //Toast.makeText(PlannerDay.this, "Yes", Toast.LENGTH_SHORT).show();
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
-
+                    addBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
                     //Toast.makeText(PlannerDay.this, key, Toast.LENGTH_SHORT).show();
 
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
@@ -131,6 +133,7 @@ public class PlannerDay extends AppCompatActivity {
                     });
                 } else {
                     Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
+                    addBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
                 }
             }
 
@@ -147,7 +150,7 @@ public class PlannerDay extends AppCompatActivity {
                 if(snapshot.exists()) {
                     //Toast.makeText(PlannerDay.this, "Yes", Toast.LENGTH_SHORT).show();
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
-
+                    addBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
                     //Toast.makeText(PlannerDay.this, key, Toast.LENGTH_SHORT).show();
 
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
@@ -171,6 +174,7 @@ public class PlannerDay extends AppCompatActivity {
                     });
                 } else {
                     Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
+                    addBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
                 }
             }
 

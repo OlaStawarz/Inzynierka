@@ -4,19 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".Planner.Planner">
-
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Plan"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -30,47 +19,91 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_naviagation" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/curved_layout"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textViewNoPlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Utwórz nowy plan"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonPlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_button"
+            android:text="Planuj"
+            app:layout_constraintEnd_toEndOf="@+id/textViewNoPlan"
+            app:layout_constraintStart_toStartOf="@+id/textViewNoPlan"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNoPlan" />
+
+        <TextView
+            android:id="@+id/textViewCurrentPlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Zobacz aktualny plan"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonPlan" />
+
+        <Button
+            android:id="@+id/buttonSeePlan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="220dp"
+            android:background="@drawable/round_button"
+            android:text="Zobacz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textViewCurrentPlan"
+            app:layout_constraintStart_toStartOf="@+id/textViewCurrentPlan"
+            app:layout_constraintTop_toBottomOf="@+id/textViewCurrentPlan" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
-        android:id="@+id/textViewNoPlan"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="Uwtórz nowy plan"
-        android:textSize="18sp"
+        android:layout_marginTop="30dp"
+        android:text="Witaj w aplikacji"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-    <Button
-        android:id="@+id/buttonPlan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Planuj"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNoPlan" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewCurrentPlan"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Zobacz aktualny plan"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/textViewNoPlan"
-        app:layout_constraintStart_toStartOf="@+id/textViewNoPlan"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlan" />
+        android:layout_marginTop="10dp"
+        android:fontFamily="cursive"
+        android:text="Mój planer"
+        android:textColor="#ffffff"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/buttonSeePlan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Zobacz"
-        app:layout_constraintEnd_toEndOf="@+id/textViewCurrentPlan"
-        app:layout_constraintStart_toStartOf="@+id/textViewCurrentPlan"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentPlan" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

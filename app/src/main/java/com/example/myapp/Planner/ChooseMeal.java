@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapp.R;
@@ -26,9 +29,9 @@ public class ChooseMeal extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecipePlannerAdapter recipeAdapter;
-
     private DatabaseReference databaseReference, plannerDatabaseReference;
     private List<RecipeModel> recipes;
+    private EditText searchRecipeEditText;
 
     String day, meal;
 
@@ -38,6 +41,7 @@ public class ChooseMeal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_meal);
 
+        searchRecipeEditText = findViewById(R.id.editTextSearchRecipePlanner);
         recyclerView = findViewById(R.id.recycler_view_recipes_planner);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,6 +53,31 @@ public class ChooseMeal extends AppCompatActivity {
         assert bundle != null;
         day = bundle.getString("day");
         meal = bundle.getString("meal");
+
+        searchRecipeEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
+        searchRecipeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editable.toString();
+                ArrayList<RecipeModel> filteredList = new ArrayList<>();
+                for (RecipeModel recipe : recipes) {
+                    if (recipe.getName().toLowerCase().contains(text.toLowerCase())) {
+                        filteredList.add(recipe);
+                    }
+                }
+                recipeAdapter.filterRecipeListPlanner(filteredList);
+            }
+        });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
