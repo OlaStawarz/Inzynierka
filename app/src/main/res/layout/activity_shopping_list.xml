@@ -60,6 +60,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
+        android:padding="8dp"
+        android:gravity="center"
         android:text="Ilość"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -37,7 +37,8 @@ import java.util.ArrayList;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-public class ShoppingList extends AppCompatActivity implements IngredientAdapter.ItemClickedListener{
+public class ShoppingList extends AppCompatActivity implements IngredientAdapter.ItemClickedListener,
+        DeleteShoppingListDialog.DeleteShoppingListListener {
 
     private TextView amountTextView;
     private EditText searchItemEditText;
@@ -111,7 +112,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
                 if (arrayAdapter.getItemCount() == 0)
                     amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
                 else if (arrayAdapter.getItemCount() == 1)
-                    amountTextView.setText("Na twojej liście znajduje się jeden produkt");
+                    amountTextView.setText("Na twojej liście znajduje się 1 produkt");
                 else if (arrayAdapter.getItemCount() > 1 && arrayAdapter.getItemCount() < 5)
                     amountTextView.setText("Na twojej liście znajdują się " +
                             arrayAdapter.getItemCount() + " produkty");
@@ -162,9 +163,15 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         deleteList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseReference.removeValue();
+                openDialog();
+
             }
         });
+    }
+
+    public void openDialog() {
+        DeleteShoppingListDialog dialog = new DeleteShoppingListDialog();
+        dialog.show(getSupportFragmentManager(), "shopping list dialog");
     }
 
 
@@ -192,7 +199,6 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
                                     databaseReference.child(selectedKey).setValue(selectedItem);
                                 }
                             }).show();
-                    //databaseReference.removeValue();
                 }
 
                 @Override
@@ -218,5 +224,10 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         bundle.putString("key", items.get(position).getItemKey());
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void confirmAction() {
+        databaseReference.removeValue();
     }
 }

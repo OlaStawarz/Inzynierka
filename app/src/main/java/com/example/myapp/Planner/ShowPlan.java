@@ -108,7 +108,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
                                     .load(snapshot.child("imageUrl").getValue().toString())
                                     .placeholder(R.mipmap.ic_launcher)
                                     .fit()
-                                    .centerCrop()
+                                    //.centerCrop()
                                     .into(imageViewBreakfast);
                         }
 
@@ -142,7 +142,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
                                     .load(snapshot.child("imageUrl").getValue().toString())
                                     .placeholder(R.mipmap.ic_launcher)
                                     .fit()
-                                    .centerCrop()
+                                    //.centerCrop()
                                     .into(imageViewSupper);
                         }
 
@@ -176,7 +176,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
                                     .load(snapshot.child("imageUrl").getValue().toString())
                                     .placeholder(R.mipmap.ic_launcher)
                                     .fit()
-                                    .centerCrop()
+                                    //.centerCrop()
                                     .into(imageViewDinner);
                         }
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.myapp.R;
 import com.example.myapp.Recipes.Recipes;
+import com.example.myapp.ShoppingList.DeleteShoppingListDialog;
 import com.example.myapp.ShoppingList.ShoppingList;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -24,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Planner extends AppCompatActivity {
+public class Planner extends AppCompatActivity implements DeletePlannerDialog.DeletePlannerListener{
 
     public Button makePlan, showPlan;
     private DatabaseReference databaseReference;
@@ -84,9 +85,8 @@ public class Planner extends AppCompatActivity {
         makePlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                databaseReference.removeValue();
-                Intent intent = new Intent(Planner.this, AddPlan.class);
-                startActivity(intent);
+                openDialog();
+
             }
         });
 
@@ -97,5 +97,17 @@ public class Planner extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void openDialog() {
+        DeletePlannerDialog dialog = new DeletePlannerDialog();
+        dialog.show(getSupportFragmentManager(), "planner dialog");
+    }
+
+    @Override
+    public void confirmChoice() {
+        databaseReference.removeValue();
+        Intent intent = new Intent(Planner.this, AddPlan.class);
+        startActivity(intent);
     }
 }

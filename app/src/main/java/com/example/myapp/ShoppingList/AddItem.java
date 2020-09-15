@@ -42,7 +42,6 @@ public class AddItem extends AppCompatActivity {
         addItem = findViewById(R.id.floatingActionBarAddItemShoppingList);
         addItemsToSpinner();
 
-        // TODO - obczaić czy można to lepiej rozwiązać
         names = new ArrayList<>();
         keys = new ArrayList<>();
         amounts = new ArrayList<>();
