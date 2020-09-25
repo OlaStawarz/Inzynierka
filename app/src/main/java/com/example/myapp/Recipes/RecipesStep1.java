@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.myapp.R;
 
@@ -50,13 +51,18 @@ public class RecipesStep1 extends AppCompatActivity {
                     category.add(snack.getText().toString());
                 }
 
-                finish();
-                Intent intent = new Intent(RecipesStep1.this, RecipesStep2.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("name", recipeName.getText().toString());
-                bundle.putStringArrayList("category", category);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (category.isEmpty()) {
+                    Toast.makeText(RecipesStep1.this, "Wybierz przynajmniej jedną kategorię", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                    Intent intent = new Intent(RecipesStep1.this, RecipesStep2.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", recipeName.getText().toString());
+                    bundle.putStringArrayList("category", category);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
 
             }
         });

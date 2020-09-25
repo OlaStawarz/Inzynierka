@@ -64,7 +64,6 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
         assert bundle != null;
         category = bundle.getStringArrayList("category");
         name = bundle.getString("name");
-        Toast.makeText(RecipesStep2.this, category.get(0), Toast.LENGTH_LONG).show();
 
         final ArrayList<IngredientModel> ingredientModels = new ArrayList<>();
 
@@ -72,39 +71,52 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String newIngredientName = ingredientName.getText().toString();
-                String newIngredientAmount = ingredientAmount.getText().toString();
-                String newIngredientUnit = spinnerUnit.getSelectedItem().toString();
-                ingredients.add(newIngredientName + "\t\t" + newIngredientAmount + " " + newIngredientUnit);
-                //adapter.notifyDataSetChanged();
-                names.add(newIngredientName);
-                amounts.add(newIngredientAmount);
-                units.add(newIngredientUnit);
+                if (ingredientName.getText().toString().isEmpty() || ingredientAmount.getText().toString().isEmpty()) {
+                    if (ingredientName.getText().toString().isEmpty())
+                        ingredientName.setError("To pole nie może być puste!");
+                    else
+                        ingredientAmount.setError("To pole nie może być puste");
+                } else {
+                    String newIngredientName = ingredientName.getText().toString();
+                    String newIngredientAmount = ingredientAmount.getText().toString();
+                    String newIngredientUnit = spinnerUnit.getSelectedItem().toString();
+                    ingredients.add(newIngredientName + "\t\t" + newIngredientAmount + " " + newIngredientUnit);
+                    //adapter.notifyDataSetChanged();
+                    names.add(newIngredientName);
+                    amounts.add(newIngredientAmount);
+                    units.add(newIngredientUnit);
 
-                IngredientModel ingredientModel = new IngredientModel(newIngredientName,
-                        Double.parseDouble(newIngredientAmount), newIngredientUnit);
-                ingredientModels.add(ingredientModel);
-                adapter = new IngredientAdapter(ingredientModels, RecipesStep2.this);
-                recyclerView.setAdapter(adapter);
-                ingredientName.setText("");
-                ingredientAmount.setText("");
+                    IngredientModel ingredientModel = new IngredientModel(newIngredientName,
+                            Double.parseDouble(newIngredientAmount), newIngredientUnit);
+                    ingredientModels.add(ingredientModel);
+                    adapter = new IngredientAdapter(ingredientModels, RecipesStep2.this);
+                    recyclerView.setAdapter(adapter);
+                    ingredientName.setText("");
+                    ingredientAmount.setText("");
+                }
+
             }
         });
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-                Intent newIntent = new Intent(RecipesStep2.this, RecipesStep3.class);
-                Bundle newBundle = new Bundle();
-                newBundle.putStringArrayList("categoryNext", category);
-                newBundle.putStringArrayList("ingredients", ingredients);
-                newBundle.putStringArrayList("names", names);
-                newBundle.putStringArrayList("amounts", amounts);
-                newBundle.putStringArrayList("units", units);
-                newBundle.putString("nameNext", name);
-                newIntent.putExtras(newBundle);
-                startActivity(newIntent);
+                if (names.isEmpty()) {
+                    Toast.makeText(RecipesStep2.this, "Dodaj przynajmniej jeden składnik", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                    Intent newIntent = new Intent(RecipesStep2.this, RecipesStep3.class);
+                    Bundle newBundle = new Bundle();
+                    newBundle.putStringArrayList("categoryNext", category);
+                    newBundle.putStringArrayList("ingredients", ingredients);
+                    newBundle.putStringArrayList("names", names);
+                    newBundle.putStringArrayList("amounts", amounts);
+                    newBundle.putStringArrayList("units", units);
+                    newBundle.putString("nameNext", name);
+                    newIntent.putExtras(newBundle);
+                    startActivity(newIntent);
+                }
+
             }
         });
     }

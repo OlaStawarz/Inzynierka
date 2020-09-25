@@ -29,7 +29,6 @@ public class PlannerDay extends AppCompatActivity {
 
     private FloatingActionButton addBreakfast, addDinner, addSupper;
     private TextView textViewBreakfast, textViewDinner, textViewSupper;
-    private ImageView imageBreakfast, imageDinner, imageSupper;
     private Intent addMealIntent;
     private Bundle addMealBundle;
     private Button addIngredients;
@@ -55,11 +54,8 @@ public class PlannerDay extends AppCompatActivity {
         addDinner = findViewById(R.id.floatingActionButtonAddDinnerToPlanner);
         addSupper = findViewById(R.id.floatingActionButtonAddSupperToPlanner);
         textViewBreakfast = findViewById(R.id.textViewPlannerBreakfastName);
-        imageBreakfast = findViewById(R.id.imageViewPlannerBreakfast);
         textViewDinner = findViewById(R.id.textViewPlannerDinnerName);
-        imageDinner = findViewById(R.id.imageViewPlannerDinner);
         textViewSupper = findViewById(R.id.textViewPlannerSupperName);
-        imageSupper = findViewById(R.id.imageViewPlannerSupper);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -110,12 +106,6 @@ public class PlannerDay extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String name = snapshot.child("name").getValue().toString();
                             textViewBreakfast.setText(name);
-                            Picasso.with(PlannerDay.this)
-                                    .load(snapshot.child("imageUrl").getValue().toString())
-                                    .placeholder(R.mipmap.ic_launcher)
-                                    .fit()
-                                    .centerCrop()
-                                    .into(imageBreakfast);
                             for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
                                 final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("name").getValue().toString();
@@ -123,105 +113,8 @@ public class PlannerDay extends AppCompatActivity {
                                         .child("amount").getValue().toString());
                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("unit").getValue().toString();
-                                if (names.contains(ingredientName)) {
-                                    int index = names.indexOf(ingredientName);
-                                    String ingredientUnit = units.get(index);
-                                    if (ingredientUnit.equals("kg")) {
-                                        switch (unit) {
-                                            case "kg": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "g": {
-                                                Double newAmount = amount / 1000 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżka": {
-                                                Double newAmount = 0.015 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżeczka": {
-                                                Double newAmount = 0.005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szczypta": {
-                                                Double newAmount = 0.0005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } else if (ingredientUnit.equals("l")) {
-                                        switch (unit) {
-                                            case "l": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "ml": {
-                                                Double newAmount = amount / 100 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szklanka": {
-                                                Double newAmount = 0.25 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        Double newAmount = amount + amounts.get(index);
-                                        amounts.set(index, newAmount);
-                                    }
-                                }
-                                else {
-                                    names.add(ingredientName);
-                                    switch (unit) {
-                                        case "kg":
-                                        case "l":
-                                        case "sztuka": {
-                                            amounts.add(amount);
-                                            units.add(unit);
-                                            break;
-                                        }
-                                        case "g": {
-                                            amounts.add(amount / 1000);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżka": {
-                                            amounts.add(0.015);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżeczka": {
-                                            amounts.add(0.005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "szczypta": {
-                                            amounts.add(0.0005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "ml": {
-                                            amounts.add(amount / 100);
-                                            units.add("l");
-                                            break;
-                                        }
-                                        case "szklanka": {
-                                            amounts.add(0.25);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                    }
+                                checkIngredients(ingredientName, amount, unit);
 
-                                }
-                                //keys.add(uploadId);
-                                //names.add(ingredientName);
                             }
                         }
 
@@ -256,12 +149,6 @@ public class PlannerDay extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String name = snapshot.child("name").getValue().toString();
                             textViewDinner.setText(name);
-                            Picasso.with(PlannerDay.this)
-                                    .load(snapshot.child("imageUrl").getValue().toString())
-                                    .placeholder(R.mipmap.ic_launcher)
-                                    .fit()
-                                    .centerCrop()
-                                    .into(imageDinner);
                             for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
                                 final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("name").getValue().toString();
@@ -269,135 +156,8 @@ public class PlannerDay extends AppCompatActivity {
                                         .child("amount").getValue().toString());
                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("unit").getValue().toString();
-                                if (names.contains(ingredientName)) {
-                                    int index = names.indexOf(ingredientName);
-                                    String ingredientUnit = units.get(index);
-                                    //TODO: jak mniej niż 1kg to w g, a jak więcej to w kg i zaokrąglać
-                                    if (ingredientUnit.equals("kg")) {
-                                        switch (unit) {
-                                            case "kg": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "g": {
-                                                Double newAmount = amount / 1000 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżka": {
-                                                Double newAmount = 0.015 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżeczka": {
-                                                Double newAmount = 0.005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szczypta": {
-                                                Double newAmount = 0.0005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } else if (ingredientUnit.equals("l")) {
-                                        switch (unit) {
-                                            case "l": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "ml": {
-                                                Double newAmount = amount / 100 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szklanka": {
-                                                Double newAmount = 0.25 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } /*else if (ingredientUnit.equals("g")) {
-                                        if (unit.equals("kg")) {
-                                            double newAmount = amount + (amounts.get(index) / 1000);
-                                            amounts.set(index, newAmount);
-                                            units.set(index, "kg");
-                                        } else {
-                                            double newAmount = 0;
-                                            switch (unit) {
-                                                case "g": {
-                                                    newAmount = amount + amounts.get(index);
+                                checkIngredients(ingredientName, amount, unit);
 
-                                                    break;
-                                                }
-                                                case "łyżka": {
-                                                    newAmount = 15 + amounts.get(index);
-                                                    break;
-                                                }
-                                                case "łyżeczka": {
-                                                    newAmount = 5 + amounts.get(index);
-                                                    break;
-                                                }
-                                                case "szczypta": {
-                                                    newAmount = 0.5 + amounts.get(index);
-                                                    break;
-                                                }
-                                            }
-                                            amounts.set(index, newAmount);
-
-                                        }
-
-
-                                    }*/ else {
-                                        Double newAmount = amount + amounts.get(index);
-                                        amounts.set(index, newAmount);
-                                    }
-                                }
-                                else {
-                                    names.add(ingredientName);
-                                    switch (unit) {
-                                        case "kg":
-                                        case "l":
-                                        case "sztuka": {
-                                            amounts.add(amount);
-                                            units.add(unit);
-                                            break;
-                                        }
-                                        case "g": {
-                                            amounts.add(amount / 1000);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżka": {
-                                            amounts.add(0.015);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżeczka": {
-                                            amounts.add(0.005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "szczypta": {
-                                            amounts.add(0.0005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "ml": {
-                                            amounts.add(amount / 100);
-                                            units.add("l");
-                                            break;
-                                        }
-                                        case "szklanka": {
-                                            amounts.add(0.25);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                    }
-
-                                }
                             }
                         }
 
@@ -431,116 +191,16 @@ public class PlannerDay extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String name = snapshot.child("name").getValue().toString();
                             textViewSupper.setText(name);
-                            Picasso.with(PlannerDay.this)
-                                    .load(snapshot.child("imageUrl").getValue().toString())
-                                    .placeholder(R.mipmap.ic_launcher)
-                                    .fit()
-                                    .centerCrop()
-                                    .into(imageSupper);
                             for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
+
                                 final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("name").getValue().toString();
                                 final double amount = Double.parseDouble(snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("amount").getValue().toString());
                                 final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("unit").getValue().toString();
-                                if (names.contains(ingredientName)) {
-                                    int index = names.indexOf(ingredientName);
-                                    String ingredientUnit = units.get(index);
-                                    if (ingredientUnit.equals("kg")) {
-                                        switch (unit) {
-                                            case "kg": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "g": {
-                                                Double newAmount = amount / 1000 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżka": {
-                                                Double newAmount = 0.015 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "łyżeczka": {
-                                                Double newAmount = 0.005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szczypta": {
-                                                Double newAmount = 0.0005 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } else if (ingredientUnit.equals("l")) {
-                                        switch (unit) {
-                                            case "l": {
-                                                Double newAmount = amount + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "ml": {
-                                                Double newAmount = amount / 100 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                            case "szklanka": {
-                                                Double newAmount = 0.25 + amounts.get(index);
-                                                amounts.set(index, newAmount);
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        Double newAmount = amount + amounts.get(index);
-                                        amounts.set(index, newAmount);
-                                    }
-                                }
-                                else {
-                                    names.add(ingredientName);
-                                    switch (unit) {
-                                        case "kg":
-                                        case "l":
-                                        case "sztuka": {
-                                            amounts.add(amount);
-                                            units.add(unit);
-                                            break;
-                                        }
-                                        case "g": {
-                                            amounts.add(amount / 1000);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżka": {
-                                            amounts.add(0.015);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "łyżeczka": {
-                                            amounts.add(0.005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "szczypta": {
-                                            amounts.add(0.0005);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                        case "ml": {
-                                            amounts.add(amount / 100);
-                                            units.add("l");
-                                            break;
-                                        }
-                                        case "szklanka": {
-                                            amounts.add(0.25);
-                                            units.add("kg");
-                                            break;
-                                        }
-                                    }
+                                checkIngredients(ingredientName, amount, unit);
 
-                                }
                             }
                         }
 
@@ -607,5 +267,145 @@ public class PlannerDay extends AppCompatActivity {
                 startActivity(addMealIntent);
             }
         });
+    }
+
+    private void checkIngredients (String ingredientName, double amount, String unit) {
+        if (names.contains(ingredientName)) {
+            int index = names.indexOf(ingredientName);
+            String ingredientUnit = units.get(index);
+            if (ingredientUnit.equals("kg")) {
+                switch (unit) {
+                    case "kg": {
+                        Double newAmount = amount + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "g": {
+                        Double newAmount = amount / 1000 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "łyżka": {
+                        Double newAmount = 0.015 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "łyżeczka": {
+                        Double newAmount = 0.005 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "szczypta": {
+                        Double newAmount = 0.0005 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                }
+            } else if (ingredientUnit.equals("l")) {
+                switch (unit) {
+                    case "l": {
+                        Double newAmount = amount + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "ml": {
+                        Double newAmount = amount / 100 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                    case "szklanka": {
+                        Double newAmount = 0.25 + amounts.get(index);
+                        amounts.set(index, newAmount);
+                        break;
+                    }
+                }
+            } else if (ingredientUnit.equals("g")) {
+                if (unit.equals("kg")) {
+                    double newAmount = amount + (amounts.get(index) / 1000);
+                    amounts.set(index, newAmount);
+                    units.set(index, "kg");
+                } else {
+                    double newAmount = 0;
+                    switch (unit) {
+                        case "g": {
+                            newAmount = amount + amounts.get(index);
+                            break;
+                        }
+                        case "łyżka": {
+                            newAmount = 15 + amounts.get(index);
+                            break;
+                        }
+                        case "łyżeczka": {
+                            newAmount = 5 + amounts.get(index);
+                            break;
+                        }
+                        case "szczypta": {
+                            newAmount = 0.5 + amounts.get(index);
+                            break;
+                        }
+                    }
+                    if (newAmount < 1000.0) {
+                        amounts.set(index, newAmount);
+                        units.set(index, "g");
+                    } else {
+                        amounts.set(index, newAmount/1000);
+                        units.set(index, "kg");
+                    }
+
+                }
+
+
+            } else {
+                Double newAmount = amount + amounts.get(index);
+                amounts.set(index, newAmount);
+            }
+        }
+        else {
+            names.add(ingredientName);
+            switch (unit) {
+                case "kg":
+                case "l":
+                case "sztuka": {
+                    amounts.add(amount);
+                    units.add(unit);
+                    break;
+                }
+                case "g": {
+                    if (amount < 1000.0) {
+                        amounts.add(amount);
+                        units.add("g");
+                    } else {
+                        amounts.add(amount / 1000);
+                        units.add("kg");
+                    }
+                    break;
+                }
+                case "łyżka": {
+                    amounts.add(15.0);
+                    units.add("g");
+                    break;
+                }
+                case "łyżeczka": {
+                    amounts.add(5.0);
+                    units.add("g");
+                    break;
+                }
+                case "szczypta": {
+                    amounts.add(0.05);
+                    units.add("g");
+                    break;
+                }
+                case "ml": {
+                    amounts.add(amount / 100);
+                    units.add("l");
+                    break;
+                }
+                case "szklanka": {
+                    amounts.add(0.25);
+                    units.add("l");
+                    break;
+                }
+            }
+        }
     }
 }

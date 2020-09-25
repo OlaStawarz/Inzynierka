@@ -8,10 +8,11 @@
 
     <Button
         android:id="@+id/buttonChooseFile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="48dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/round_button"
         android:text="Wybierz plik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewAddImage" />
@@ -30,9 +31,10 @@
 
     <Button
         android:id="@+id/buttonAddRecipe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="48dp"
         android:layout_marginTop="15dp"
+        android:background="@drawable/round_button"
         android:text="Dodaj przepis"
         app:layout_constraintEnd_toEndOf="@+id/imageViewRecipe"
         app:layout_constraintTop_toBottomOf="@+id/progressBarLoadImage" />

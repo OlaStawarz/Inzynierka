@@ -95,10 +95,13 @@ public class ChooseMeal extends AppCompatActivity {
                 recipeAdapter.setOnButtonClickListener(new RecipePlannerAdapter.OnButtonClickListener() {
                     @Override
                     public void onItemChoose(int position) {
-                        //TODO: nie wybiera się dobry przepis jeśli lista jest przefiltrowana
-                        //Toast.makeText(ChooseMeal.this, "Choose", Toast.LENGTH_SHORT).show();
-                        ChosenMeal chosenMeal = new ChosenMeal(recipes.get(position).getRecipeKey());
-                        plannerDatabaseReference.child(day).child(meal).setValue(chosenMeal);
+                        if (!filteredList.isEmpty()) {
+                            ChosenMeal chosenMeal = new ChosenMeal(filteredList.get(position).getRecipeKey());
+                            plannerDatabaseReference.child(day).child(meal).setValue(chosenMeal);
+                        } else {
+                            ChosenMeal chosenMeal = new ChosenMeal(recipes.get(position).getRecipeKey());
+                            plannerDatabaseReference.child(day).child(meal).setValue(chosenMeal);
+                        }
                         finish();
 
                     }

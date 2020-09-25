@@ -62,6 +62,20 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         dinner = findViewById(R.id.cardViewAddDinner);
         supper = findViewById(R.id.cardViewAddSupper);
 
+        recyclerView.setVisibility(View.INVISIBLE);
+        textViewBreakfast.setVisibility(View.INVISIBLE);
+        textViewDinner.setVisibility(View.INVISIBLE);
+        textViewSupper.setVisibility(View.INVISIBLE);
+        breakfast.setVisibility(View.INVISIBLE);
+        dinner.setVisibility(View.INVISIBLE);
+        supper.setVisibility(View.INVISIBLE);
+        textViewBreakfast.setVisibility(View.INVISIBLE);
+        textViewDinner.setVisibility(View.INVISIBLE);
+        textViewSupper.setVisibility(View.INVISIBLE);
+        imageViewBreakfast.setVisibility(View.INVISIBLE);
+        imageViewDinner.setVisibility(View.INVISIBLE);
+        imageViewSupper.setVisibility(View.INVISIBLE);
+
         intent = new Intent(ShowPlan.this, RecipeDetail.class);
         bundle = new Bundle();
 
@@ -75,19 +89,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
                 } else {
                     Toast.makeText(ShowPlan.this, "nie jest", Toast.LENGTH_SHORT).show();
                     isPlanExist.setText("Obecnie nie posiadasz żadnego planu.");
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    textViewBreakfast.setVisibility(View.INVISIBLE);
-                    textViewDinner.setVisibility(View.INVISIBLE);
-                    textViewSupper.setVisibility(View.INVISIBLE);
-                    breakfast.setVisibility(View.INVISIBLE);
-                    dinner.setVisibility(View.INVISIBLE);
-                    supper.setVisibility(View.INVISIBLE);
-                    textViewBreakfast.setVisibility(View.INVISIBLE);
-                    textViewDinner.setVisibility(View.INVISIBLE);
-                    textViewSupper.setVisibility(View.INVISIBLE);
-                    imageViewBreakfast.setVisibility(View.INVISIBLE);
-                    imageViewDinner.setVisibility(View.INVISIBLE);
-                    imageViewSupper.setVisibility(View.INVISIBLE);
+
                 }
             }
 
@@ -106,6 +108,11 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textViewBreakfast.setVisibility(View.VISIBLE);
+                    breakfast.setVisibility(View.VISIBLE);
+                    textViewBreakfast.setVisibility(View.VISIBLE);
+                    imageViewBreakfast.setVisibility(View.VISIBLE);
                     keyBreakfast = snapshot.child("key").getValue().toString();
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -140,6 +147,11 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textViewSupper.setVisibility(View.VISIBLE);
+                    supper.setVisibility(View.VISIBLE);
+                    textViewSupper.setVisibility(View.VISIBLE);
+                    imageViewSupper.setVisibility(View.VISIBLE);
                     keyDinner = snapshot.child("key").getValue().toString();
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -174,6 +186,11 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textViewDinner.setVisibility(View.VISIBLE);
+                    dinner.setVisibility(View.VISIBLE);
+                    textViewDinner.setVisibility(View.VISIBLE);
+                    imageViewDinner.setVisibility(View.VISIBLE);
                     keySupper = snapshot.child("key").getValue().toString();
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
