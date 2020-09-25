@@ -151,6 +151,9 @@ public class RecipesStep4 extends AppCompatActivity {
                         if (description.isEmpty()) {
                             description = "---";
                         }
+                        if(link.isEmpty()) {
+                            link = "---";
+                        }
                         //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
                         recipeModel = new RecipeModel(name, category, ingredients,
                                 description, link, downloadUrl.toString(), ingredientModels);

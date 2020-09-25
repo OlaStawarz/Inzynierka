@@ -10,12 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/buttonSaveDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="Zapisz"
+            app:layout_constraintBottom_toTopOf="@+id/cardViewAddBreakfast"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewAddBreakfast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="10dp"
             app:cardCornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="parent"

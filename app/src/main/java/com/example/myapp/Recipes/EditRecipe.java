@@ -1,14 +1,19 @@
 package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,25 +24,37 @@ import com.example.myapp.ShoppingList.EditIngredient;
 import com.example.myapp.ShoppingList.IngredientAdapter;
 import com.example.myapp.ShoppingList.IngredientModel;
 import com.example.myapp.ShoppingList.ShoppingList;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class EditRecipe extends AppCompatActivity implements IngredientAdapter.ItemClickedListener{
 
+    private static final int PICK_IMAGE_REQUEST = 2;
+    private Uri imageUri;
+
     private DatabaseReference databaseReference, databaseReferenceIngredients;
-    private ImageView imageView, editImageView;
+    private StorageReference storageReference;
+    private ImageView imageView;
     private EditText editTextName, editTextDescription, editTextLink;
-    IngredientAdapter arrayAdapter;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
+    private IngredientAdapter arrayAdapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<IngredientModel> ingredients;
-    Button saveChanges;
+    Button saveChanges, saveImage;
+    FloatingActionButton addIngredient;
     String key;
 
     @Override
@@ -46,20 +63,69 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         setContentView(R.layout.activity_edit_recipe);
 
         imageView = findViewById(R.id.imageViewRecipeImageDetailEdit);
-        editImageView = findViewById(R.id.imageViewEditImage);
         editTextName = findViewById(R.id.editTextRecipeNameDetailEdit);
         editTextDescription = findViewById(R.id.editTextDisplayDescriptionEdit);
         editTextLink = findViewById(R.id.editTextDisplayLinkEdit);
         saveChanges = findViewById(R.id.buttonSaveChanges);
+        saveImage = findViewById(R.id.buttonEditRecipeSavePhoto);
+        addIngredient = findViewById(R.id.floatingActionBarAddItemRecipe);
         recyclerView = findViewById(R.id.recycler_view_ingredients_edit);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        storageReference = FirebaseStorage.getInstance().getReference("Image");
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         key = bundle.getString("key");
         //Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+
+        addIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addIntent = new Intent(EditRecipe.this, AddIngredientToRecipe.class);
+                Bundle addBundle = new Bundle();
+                addBundle.putString("key", key);
+                addIntent.putExtras(addBundle);
+                startActivity(addIntent);
+            }
+        });
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fileChooser();
+            }
+        });
+
+        saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                        + "." + getExtension(imageUri));
+
+                fileReference.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!urlTask.isSuccessful());
+                                Uri downloadUrl = urlTask.getResult();
+                                Toast.makeText(EditRecipe.this, downloadUrl.toString(), Toast.LENGTH_SHORT).show();
+                                databaseReference.child("imageUrl").setValue(downloadUrl.toString());
+                                Toast.makeText(EditRecipe.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
+                                //finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(EditRecipe.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+            }
+        });
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -118,12 +184,70 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(EditRecipe.this, "Edytowanie...", Toast.LENGTH_SHORT).show();
                 databaseReference.child("name").setValue(editTextName.getText().toString());
                 databaseReference.child("description").setValue(editTextDescription.getText().toString());
                 databaseReference.child("link").setValue(editTextLink.getText().toString());
+               /* Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {*/
+
+                //    }
+               // }, 5000);
                 finish();
             }
         });
+    }
+
+    private void fileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+
+        }
+    }
+
+    private String getExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadImage() {
+
+        StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                + "." + getExtension(imageUri));
+
+        fileReference.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!urlTask.isSuccessful());
+                        Uri downloadUrl = urlTask.getResult();
+                        Toast.makeText(EditRecipe.this, downloadUrl.toString(), Toast.LENGTH_SHORT).show();
+                        databaseReference.child("imageUrl").setValue(downloadUrl);
+                        Toast.makeText(EditRecipe.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
+                        //finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditRecipe.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override

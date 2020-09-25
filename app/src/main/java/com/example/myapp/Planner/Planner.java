@@ -41,9 +41,7 @@ public class Planner extends AppCompatActivity implements DeletePlannerDialog.De
         makePlan = findViewById(R.id.buttonPlan);
         showPlan = findViewById(R.id.buttonSeePlan);
         databaseReference = FirebaseDatabase.getInstance().getReference("Planner");
-       // databaseReference.child("cokolwiek").setValue("cokolwiek");
 
-        //TODO: sprawdzić dlaczego się wywala - NIE MOŻE BYC "cokolwiek"!!!!!
         days = new ArrayList<>();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

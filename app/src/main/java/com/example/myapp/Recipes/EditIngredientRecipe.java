@@ -76,6 +76,9 @@ public class EditIngredientRecipe extends AppCompatActivity {
         units.add("łyżka");
         units.add("łyżeczka");
         units.add("szczypta");
+        units.add("l");
+        units.add("ml");
+        units.add("szklanka");
         unit.setAdapter(new ArrayAdapter<>(EditIngredientRecipe.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }

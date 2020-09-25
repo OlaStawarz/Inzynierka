@@ -30,11 +30,9 @@ public class ChooseMeal extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecipePlannerAdapter recipeAdapter;
     private DatabaseReference databaseReference, plannerDatabaseReference;
-    private List<RecipeModel> recipes;
+    private ArrayList<RecipeModel> recipes, filteredList;
     private EditText searchRecipeEditText;
-
     String day, meal;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +52,8 @@ public class ChooseMeal extends AppCompatActivity {
         day = bundle.getString("day");
         meal = bundle.getString("meal");
 
+        filteredList = new ArrayList<>();
+
         searchRecipeEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
         searchRecipeEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,7 +69,7 @@ public class ChooseMeal extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = editable.toString();
-                ArrayList<RecipeModel> filteredList = new ArrayList<>();
+                filteredList = new ArrayList<>();
                 for (RecipeModel recipe : recipes) {
                     if (recipe.getName().toLowerCase().contains(text.toLowerCase())) {
                         filteredList.add(recipe);
@@ -95,7 +95,8 @@ public class ChooseMeal extends AppCompatActivity {
                 recipeAdapter.setOnButtonClickListener(new RecipePlannerAdapter.OnButtonClickListener() {
                     @Override
                     public void onItemChoose(int position) {
-                        Toast.makeText(ChooseMeal.this, "Choose", Toast.LENGTH_SHORT).show();
+                        //TODO: nie wybiera się dobry przepis jeśli lista jest przefiltrowana
+                        //Toast.makeText(ChooseMeal.this, "Choose", Toast.LENGTH_SHORT).show();
                         ChosenMeal chosenMeal = new ChosenMeal(recipes.get(position).getRecipeKey());
                         plannerDatabaseReference.child(day).child(meal).setValue(chosenMeal);
                         finish();
@@ -104,16 +105,13 @@ public class ChooseMeal extends AppCompatActivity {
 
                     @Override
                     public void onItemShow(int position) {
-                        Toast.makeText(ChooseMeal.this, "Details", Toast.LENGTH_SHORT).show();
                         Intent showIntent = new Intent(ChooseMeal.this, RecipeDetail.class);
                         Bundle showBundle = new Bundle();
-                        showBundle.putString("name", recipes.get(position).getName());
-                        showBundle.putString("image", recipes.get(position).getImageUrl());
-                        showBundle.putStringArrayList("ingredients", recipes.get(position).getIngredients());
-                        showBundle.putString("description", recipes.get(position).getDescription());
-                        showBundle.putString("link", recipes.get(position).getLink());
-                        showBundle.putString("key", recipes.get(position).getRecipeKey());
-                        Toast.makeText(ChooseMeal.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
+                        if (filteredList.isEmpty()) {
+                            showBundle.putString("key", recipes.get(position).getRecipeKey());
+                        } else {
+                            showBundle.putString("key", filteredList.get(position).getRecipeKey());
+                        }
                         showIntent.putExtras(showBundle);
                         startActivity(showIntent);
                     }
@@ -125,8 +123,6 @@ public class ChooseMeal extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 }

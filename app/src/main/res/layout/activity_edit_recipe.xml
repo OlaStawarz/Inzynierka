@@ -13,14 +13,14 @@
 
         <Button
             android:id="@+id/buttonSaveChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/round_button"
-            android:text="Button"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:text="Zapisz zmiany"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEditRecipeSavePhoto" />
 
         <ImageView
             android:id="@+id/imageViewRecipeImageDetailEdit"
@@ -31,15 +31,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
-
-        <ImageView
-            android:id="@+id/imageViewEditImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#ffffff"
-            android:src="@drawable/ic_edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -66,10 +57,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
+                    android:gravity="center"
                     android:padding="10dp"
                     android:text="Składniki"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionBarAddItemRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="150dp"
+                    android:src="@drawable/ic_add"
+                    android:backgroundTint="@color/colorPrimary"/>
 
 
             </LinearLayout>
@@ -188,6 +188,17 @@
 
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonEditRecipeSavePhoto"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/round_button"
+            android:text="Zapisz zdjęcie"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewRecipeImageDetailEdit"
+            app:layout_constraintTop_toTopOf="@+id/imageViewRecipeImageDetailEdit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -46,8 +46,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
     private IngredientAdapter arrayAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addItem, deleteList;
-    ArrayList<IngredientModel> items;
-    ArrayList<String> blabla;
+    private ArrayList<IngredientModel> items, filteredList;
     private DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
 
@@ -70,6 +69,8 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
 
+        filteredList = new ArrayList<>();
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         searchItemEditText.addTextChangedListener(new TextWatcher() {
@@ -86,7 +87,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = editable.toString();
-                ArrayList<IngredientModel> filteredList = new ArrayList<>();
+                filteredList = new ArrayList<>();
                 for (IngredientModel item : items) {
                     if (item.getName().toLowerCase().contains(text.toLowerCase())) {
                         filteredList.add(item);
@@ -100,26 +101,27 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                items = new ArrayList<>();
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    IngredientModel item = postSnapshot.getValue(IngredientModel.class);
-                    assert item != null;
-                    item.setItemKey(postSnapshot.getKey());
-                    items.add(item);
+                if (snapshot.exists()){
+                    items = new ArrayList<>();
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        IngredientModel item = postSnapshot.getValue(IngredientModel.class);
+                        assert item != null;
+                        item.setItemKey(postSnapshot.getKey());
+                        items.add(item);
+                    }
+                    arrayAdapter = new IngredientAdapter(items, ShoppingList.this);
+                    recyclerView.setAdapter(arrayAdapter);
+                    if (arrayAdapter.getItemCount() == 0)
+                        amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
+                    else if (arrayAdapter.getItemCount() == 1)
+                        amountTextView.setText("Na twojej liście znajduje się 1 produkt");
+                    else if (arrayAdapter.getItemCount() > 1 && arrayAdapter.getItemCount() < 5)
+                        amountTextView.setText("Na twojej liście znajdują się " +
+                                arrayAdapter.getItemCount() + " produkty");
+                    else
+                        amountTextView.setText("Na twojej liście znajduje się " +
+                                arrayAdapter.getItemCount() + " produktów");
                 }
-                arrayAdapter = new IngredientAdapter(items, ShoppingList.this);
-                recyclerView.setAdapter(arrayAdapter);
-                if (arrayAdapter.getItemCount() == 0)
-                    amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
-                else if (arrayAdapter.getItemCount() == 1)
-                    amountTextView.setText("Na twojej liście znajduje się 1 produkt");
-                else if (arrayAdapter.getItemCount() > 1 && arrayAdapter.getItemCount() < 5)
-                    amountTextView.setText("Na twojej liście znajdują się " +
-                            arrayAdapter.getItemCount() + " produkty");
-                else
-                    amountTextView.setText("Na twojej liście znajduje się " +
-                        arrayAdapter.getItemCount() + " produktów");
-
             }
 
             @Override
@@ -217,11 +219,16 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
 
     @Override
     public void itemClicked(int position) {
-        //Toast.makeText(ShoppingList.this, String.valueOf(items.get(position).getName()), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(ShoppingList.this, EditIngredient.class);
         Bundle bundle = new Bundle();
-        bundle.putString("name", items.get(position).getName());
-        bundle.putString("key", items.get(position).getItemKey());
+        if (filteredList.isEmpty()) {
+            bundle.putString("name", items.get(position).getName());
+            bundle.putString("key", items.get(position).getItemKey());
+
+        } else {
+            bundle.putString("name", filteredList.get(position).getName());
+            bundle.putString("key", filteredList.get(position).getItemKey());
+        }
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -230,4 +237,5 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
     public void confirmAction() {
         databaseReference.removeValue();
     }
+
 }

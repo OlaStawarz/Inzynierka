@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
@@ -32,7 +34,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private List<RecipeModel> recipes;
     private OnItemClickedListener onItemClickedListener;
     private OnFavouriteButtonClickListener onFavouriteButtonClickListener;
-    //ListView listView;
 
     public RecipeAdapter(Context context, List<RecipeModel> recipes, OnItemClickedListener onItemClickedListener,
                          OnFavouriteButtonClickListener onFavouriteButtonClickListener) {
@@ -62,14 +63,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 .centerCrop()
                 .into(holder.imageView);
 
-       /* for (int i = 0; i < recipeModel.getIngredients().size(); i++) {
-            String ingredient = recipeModel.getIngredients().get(i);
-            displayIngredients += "\n" + ingredient;
-        }
-        holder.ingredients.setText(displayIngredients);
-        holder.description.setText(recipeModel.getDescription());*/
-        //holder.link.setText(recipeModel.getLink());
-
     }
 
     @Override
@@ -85,12 +78,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         OnFavouriteButtonClickListener onFavouriteButtonClickListener;
-        public TextView recipeName, description, link, ingredients;
+        public TextView recipeName, link, ingredients;
         public ImageView imageView, addToFavouriteImageView;
         OnItemClickedListener onItemClickedListener;
-        boolean isFavourite = false;
+        boolean isFavourite;
         DatabaseReference databaseReference;
-
 
         public RecipeViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener,
                                 final OnFavouriteButtonClickListener onFavouriteButtonClickListener) {
@@ -101,6 +93,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             this.onItemClickedListener = onItemClickedListener;
             this.onFavouriteButtonClickListener = onFavouriteButtonClickListener;
             databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
+            isFavourite = false;
+
 
             addToFavouriteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,21 +106,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                         if (position != RecyclerView.NO_POSITION) {
                             if (!isFavourite) {
                                 addToFavouriteImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite));
-                                databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("true");
+                                //databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("true");
                                 isFavourite = true;
                             } else {
                                 addToFavouriteImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_add));
-                                databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("false");
+                                //databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("false");
                                 isFavourite = false;
                             }
-                            /*boolean isFavourite = false;
-                            //Drawable d = addToFavouriteImageView.getDrawable();
-                            //Drawable b = context.getResources().getDrawable(R.drawable.ic_favorite_add);
-                            if (isFavourite) {
-
-                            } else {
-                                addToFavouriteImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_add));
-                            }*/
                             onFavouriteButtonClickListener.addToFavourite(position);
                         }
                     }
@@ -141,8 +127,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             onItemClickedListener.itemClicked(getAdapterPosition());
         }
 
-
-        // public void OnClick()
     }
 
     public interface OnItemClickedListener {
@@ -157,7 +141,4 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         this.onFavouriteButtonClickListener = onButtonClickListener;
     }
 
-    /*public void setOnItemClickListener(OnItemClickedListener listener) {
-
-    }*/
 }

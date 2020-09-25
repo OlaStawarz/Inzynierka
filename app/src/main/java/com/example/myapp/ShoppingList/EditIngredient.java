@@ -68,9 +68,8 @@ public class EditIngredient extends AppCompatActivity {
         units.add("kg");
         units.add("g");
         units.add("sztuka");
-        units.add("łyżka");
-        units.add("łyżeczka");
-        units.add("szczypta");
+        units.add("l");
+        units.add("ml");
         unit.setAdapter(new ArrayAdapter<>(EditIngredient.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }
