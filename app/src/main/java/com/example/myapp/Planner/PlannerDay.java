@@ -2,12 +2,15 @@ package com.example.myapp.Planner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +30,14 @@ import java.util.Objects;
 
 public class PlannerDay extends AppCompatActivity {
 
-    private FloatingActionButton addBreakfast, addDinner, addSupper;
-    private TextView textViewBreakfast, textViewDinner, textViewSupper;
+    private FloatingActionButton addBreakfast, addDinner, addSupper, addSecondBreakfast, addSnack;
+    private TextView textViewBreakfast, textViewDinner, textViewSupper, textViewSecondBreakfast, textViewSnack,
+                secondBreakfastTitle, snackTitle;
     private Intent addMealIntent;
     private Bundle addMealBundle;
     private Button addIngredients;
-
+    private CardView snack, secondBreakfast;
+    private CheckBox checkBoxSecondBreakfast, checkBoxSnack;
 
     private DatabaseReference databaseReferencePlanner, databaseReferenceRecipe,
             databaseReferenceShoppingList;
@@ -41,8 +46,9 @@ public class PlannerDay extends AppCompatActivity {
     IngredientModel item;
 
     DatabaseReference breakfastDatabaseReference, dinnerDatabaseReference, supperDatabaseReference,
-            recipeDatabaseReference;
+            recipeDatabaseReference, secondBreakfastDatabaseReference, snackDatabaseReference;
     String key = "";
+    private boolean isSecondBreakfast = false, isSnack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +59,33 @@ public class PlannerDay extends AppCompatActivity {
         addBreakfast = findViewById(R.id.floatingActionButtonAddBreakfastToPlanner);
         addDinner = findViewById(R.id.floatingActionButtonAddDinnerToPlanner);
         addSupper = findViewById(R.id.floatingActionButtonAddSupperToPlanner);
+        addSecondBreakfast = findViewById(R.id.floatingActionButtonAddSecondBreakfastToPlanner);
+        addSnack = findViewById(R.id.floatingActionBarAddSnackToPlanner);
+
         textViewBreakfast = findViewById(R.id.textViewPlannerBreakfastName);
         textViewDinner = findViewById(R.id.textViewPlannerDinnerName);
         textViewSupper = findViewById(R.id.textViewPlannerSupperName);
+        textViewSnack = findViewById(R.id.textViewSnackName);
+        textViewSecondBreakfast = findViewById(R.id.textViewPlannerSecondBreakfastName);
+
+        secondBreakfastTitle = findViewById(R.id.textViewChosenSecondBreakfast);
+        snackTitle = findViewById(R.id.textViewChosenSnack);
+
+        snack = findViewById(R.id.cardViewAddSnack);
+        secondBreakfast = findViewById(R.id.cardViewAddSecondBreakfast);
+        checkBoxSecondBreakfast = findViewById(R.id.checkBoxSecondBreakfast);
+        checkBoxSnack = findViewById(R.id.checkBoxAddSnack);
+
+        secondBreakfast.setVisibility(View.INVISIBLE);
+        secondBreakfastTitle.setVisibility(View.INVISIBLE);
+        textViewSecondBreakfast.setVisibility(View.INVISIBLE);
+        addSecondBreakfast.setVisibility(View.INVISIBLE);
+
+        snackTitle.setVisibility(View.INVISIBLE);
+        snack.setVisibility(View.INVISIBLE);
+        textViewSnack.setVisibility(View.INVISIBLE);
+        addSecondBreakfast.setVisibility(View.INVISIBLE);
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -67,6 +97,33 @@ public class PlannerDay extends AppCompatActivity {
         breakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("breakfast");
         dinnerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("dinner");
         supperDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("supper");
+        snackDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("snack");
+        secondBreakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("secondBreakfast");
+
+        checkBoxSnack.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checkBoxSnack.isChecked()) {
+                    isSnack = true;
+                } else {
+                    isSnack = false;
+                }
+                checkAdditionalMeals();
+            }
+        });
+
+        checkBoxSecondBreakfast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (checkBoxSecondBreakfast.isChecked()) {
+                    isSecondBreakfast = true;
+                } else {
+                    isSecondBreakfast = false;
+                }
+                checkAdditionalMeals();
+
+            }
+        });
 
         databaseReferenceShoppingList = FirebaseDatabase.getInstance().getReference("ShoppingList");
 
@@ -221,7 +278,109 @@ public class PlannerDay extends AppCompatActivity {
             }
         };
         supperDatabaseReference.addValueEventListener(supperEventListener);
+
+        ValueEventListener secondBreakfastEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
+                    //Toast.makeText(PlannerDay.this, String.valueOf(isSecondBreakfast), Toast.LENGTH_SHORT).show();
+                    if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
+                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    else
+                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
+                                textViewSnack.setText(name);
+                            else
+                                textViewSecondBreakfast.setText(name);
+                            for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
+                                final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("name").getValue().toString();
+                                final double amount = Double.parseDouble(snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("amount").getValue().toString());
+                                final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("unit").getValue().toString();
+                                checkIngredients(ingredientName, amount, unit);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
+                    addSupper.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        secondBreakfastDatabaseReference.addValueEventListener(secondBreakfastEventListener);
         //dinnerEventListener.notify();
+
+        ValueEventListener snackEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
+                    if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
+                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    else
+                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
+                                textViewSecondBreakfast.setText(name);
+                            else
+                                textViewSnack.setText(name);
+
+                            for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
+
+                                final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("name").getValue().toString();
+                                final double amount = Double.parseDouble(snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("amount").getValue().toString());
+                                final String unit = snapshot.child("ingredientModels").child(String.valueOf(i))
+                                        .child("unit").getValue().toString();
+                                checkIngredients(ingredientName, amount, unit);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    //Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
+                    if (secondBreakfastTitle.getText().toString().equals("II śniadanie"))
+                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
+                    else
+                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        snackDatabaseReference.addValueEventListener(snackEventListener);
 
         addIngredients.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,6 +426,83 @@ public class PlannerDay extends AppCompatActivity {
                 startActivity(addMealIntent);
             }
         });
+
+        addSecondBreakfast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (secondBreakfastTitle.getText().toString().equals("Przekąska")) {
+                    addMealBundle.putString("meal", "snack");
+                } else {
+                    addMealBundle.putString("meal", "secondBreakfast");
+                }
+                addMealIntent.putExtras(addMealBundle);
+                startActivity(addMealIntent);
+            }
+        });
+
+        addSnack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (snackTitle.getText().toString().equals("Przekąska")) {
+                    addMealBundle.putString("meal", "snack");
+                } else {
+                    addMealBundle.putString("meal", "secondBreakfast");
+                }
+                addMealIntent.putExtras(addMealBundle);
+                startActivity(addMealIntent);
+            }
+        });
+    }
+
+    private void checkAdditionalMeals () {
+
+        if (isSnack && isSecondBreakfast) {
+            secondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setVisibility(View.VISIBLE);
+            textViewSecondBreakfast.setVisibility(View.VISIBLE);
+            addSecondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setText("II śniadanie");
+
+            snackTitle.setVisibility(View.VISIBLE);
+            snack.setVisibility(View.VISIBLE);
+            textViewSnack.setVisibility(View.VISIBLE);
+            addSnack.setVisibility(View.VISIBLE);
+            snackTitle.setText("Przekąska");
+        } else if (isSnack) {
+            secondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setVisibility(View.VISIBLE);
+            textViewSecondBreakfast.setVisibility(View.VISIBLE);
+            addSecondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setText("Przekąska");
+
+            snackTitle.setVisibility(View.INVISIBLE);
+            snack.setVisibility(View.INVISIBLE);
+            textViewSnack.setVisibility(View.INVISIBLE);
+            addSnack.setVisibility(View.INVISIBLE);
+        } else if (isSecondBreakfast) {
+            secondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setVisibility(View.VISIBLE);
+            textViewSecondBreakfast.setVisibility(View.VISIBLE);
+            addSecondBreakfast.setVisibility(View.VISIBLE);
+            secondBreakfastTitle.setText("II śniadanie");
+
+            snackTitle.setVisibility(View.INVISIBLE);
+            snack.setVisibility(View.INVISIBLE);
+            textViewSnack.setVisibility(View.INVISIBLE);
+            addSnack.setVisibility(View.INVISIBLE);
+        }  else {
+            secondBreakfast.setVisibility(View.INVISIBLE);
+            secondBreakfastTitle.setVisibility(View.INVISIBLE);
+            textViewSecondBreakfast.setVisibility(View.INVISIBLE);
+            addSecondBreakfast.setVisibility(View.INVISIBLE);
+
+            snackTitle.setVisibility(View.INVISIBLE);
+            snack.setVisibility(View.INVISIBLE);
+            textViewSnack.setVisibility(View.INVISIBLE);
+            addSecondBreakfast.setVisibility(View.INVISIBLE);
+
+        }
+
     }
 
     private void checkIngredients (String ingredientName, double amount, String unit) {

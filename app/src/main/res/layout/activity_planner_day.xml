@@ -140,9 +140,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
             app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/cardViewAddDinner"
             app:layout_constraintTop_toBottomOf="@+id/cardViewAddDinner">
@@ -180,8 +178,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:textSize="20sp"
                     android:padding="8dp"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textViewChosenSupper" />
@@ -190,6 +188,153 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Dodaj posiłki"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/cardViewAddSupper"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewAddSupper" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSecondBreakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="II śniadanie"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <CheckBox
+            android:id="@+id/checkBoxAddSnack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:textSize="18sp"
+            android:text="Przekąska"
+            app:layout_constraintBottom_toBottomOf="@+id/checkBoxSecondBreakfast"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxSecondBreakfast" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewAddSecondBreakfast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="@+id/cardViewAddSupper"
+            app:layout_constraintStart_toStartOf="@+id/cardViewAddSupper"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxAddSnack">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="-2dp">
+
+                <TextView
+                    android:id="@+id/textViewChosenSecondBreakfast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:text="II śniadanie"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButtonAddSecondBreakfastToPlanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@drawable/ic_add"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewChosenSecondBreakfast"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textViewChosenSecondBreakfast" />
+
+                <TextView
+                    android:id="@+id/textViewPlannerSecondBreakfastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewChosenSecondBreakfast" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewAddSnack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/cardViewAddSecondBreakfast"
+            app:layout_constraintStart_toStartOf="@+id/cardViewAddSecondBreakfast"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewAddSecondBreakfast">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="-2dp">
+
+                <TextView
+                    android:id="@+id/textViewChosenSnack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Przekąska"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionBarAddSnackToPlanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@drawable/ic_add"
+                    app:layout_constraintBottom_toBottomOf="@+id/textViewChosenSnack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textViewChosenSnack" />
+
+                <TextView
+                    android:id="@+id/textViewSnackName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewChosenSnack" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

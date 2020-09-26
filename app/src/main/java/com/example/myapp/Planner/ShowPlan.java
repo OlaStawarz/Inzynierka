@@ -11,11 +11,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
 import com.example.myapp.Recipes.RecipeDetail;
+import com.example.myapp.Recipes.RecipeModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,22 +27,26 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter.OnHorizontalItemClickListener{
+public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter.OnHorizontalItemClickListener {
 
     RecyclerView recyclerView;
     ArrayList<DayModel> arrayList;
     HorizontalDaysAdapter daysAdapter;
     TextView textViewBreakfast, textViewDinner, textViewSupper, textViewBreakfastTitle,
-            textViewDinnerTitle, textViewSupperTitle, isPlanExist;
-    CardView breakfast, dinner, supper;
-    ImageView imageViewBreakfast, imageViewDinner, imageViewSupper;
+            textViewDinnerTitle, textViewSupperTitle, isPlanExist, textViewSecondBreakfast, textViewSecondBreakfastTitle,
+            textViewSnackTitle, textViewSnack;
+    CardView breakfast, dinner, supper, secondBreakfast, snack;
+    ImageView imageViewBreakfast, imageViewDinner, imageViewSupper, imageViewSecondBreakfast, imageViewSnack;
     DatabaseReference recipeDatabaseReference, databaseReference, databaseReferenceBreakfast,
-                        databaseReferenceDinner, databaseReferenceSupper, databaseReferenceT;
+                        databaseReferenceDinner, databaseReferenceSupper, databaseReferenceT,
+                        databaseReferenceSecondBreakfast, databaseReferenceSnack;
     String[] daysNumbers;
-    String keyBreakfast, keyDinner, keySupper;
+    String keyBreakfast = "", keyDinner = "", keySupper = "", keySecondBreakfast = "", keySnack = "";
 
     Intent intent;
     Bundle bundle;
+
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,30 +57,30 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         textViewBreakfast = findViewById(R.id.textViewPlannerBreakfastName);
         textViewDinner = findViewById(R.id.textViewPlannerDinnerName);
         textViewSupper = findViewById(R.id.textViewPlannerSupperName);
+        textViewSecondBreakfast = findViewById(R.id.textViewChosenSecondBreakfastName);
+        textViewSnack = findViewById(R.id.textViewChosenSnackName);
+
         imageViewBreakfast = findViewById(R.id.imageViewPlannerBreakfast);
         imageViewDinner = findViewById(R.id.imageViewPlannerDinner);
         imageViewSupper = findViewById(R.id.imageViewPlannerSupper);
+        imageViewSecondBreakfast = findViewById(R.id.imageViewPlannerSecondBreakfast);
+        imageViewSnack = findViewById(R.id.imageViewPlannerSnack);
+
         textViewBreakfastTitle = findViewById(R.id.textViewChosenBreakfast);
         textViewDinnerTitle = findViewById(R.id.textViewChosenDinner);
         textViewSupperTitle = findViewById(R.id.textViewChosenSupper);
+        textViewSecondBreakfastTitle = findViewById(R.id.textViewChosenSecondBreakfastPlanner);
+        textViewSnackTitle = findViewById(R.id.textViewChosenSnackPlanner);
+
         isPlanExist = findViewById(R.id.textViewIfPlanExist);
+        linearLayout = findViewById(R.id.linearLayoutShowPlan);
+
         breakfast = findViewById(R.id.cardViewAddBreakfast);
         dinner = findViewById(R.id.cardViewAddDinner);
         supper = findViewById(R.id.cardViewAddSupper);
+        secondBreakfast = findViewById(R.id.cardViewAddSecondBreakfastShowPlan);
+        snack = findViewById(R.id.cardViewAddSnackShowPlan);
 
-        recyclerView.setVisibility(View.INVISIBLE);
-        textViewBreakfast.setVisibility(View.INVISIBLE);
-        textViewDinner.setVisibility(View.INVISIBLE);
-        textViewSupper.setVisibility(View.INVISIBLE);
-        breakfast.setVisibility(View.INVISIBLE);
-        dinner.setVisibility(View.INVISIBLE);
-        supper.setVisibility(View.INVISIBLE);
-        textViewBreakfast.setVisibility(View.INVISIBLE);
-        textViewDinner.setVisibility(View.INVISIBLE);
-        textViewSupper.setVisibility(View.INVISIBLE);
-        imageViewBreakfast.setVisibility(View.INVISIBLE);
-        imageViewDinner.setVisibility(View.INVISIBLE);
-        imageViewSupper.setVisibility(View.INVISIBLE);
 
         intent = new Intent(ShowPlan.this, RecipeDetail.class);
         bundle = new Bundle();
@@ -89,6 +95,27 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
                 } else {
                     Toast.makeText(ShowPlan.this, "nie jest", Toast.LENGTH_SHORT).show();
                     isPlanExist.setText("Obecnie nie posiadasz żadnego planu.");
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    textViewBreakfast.setVisibility(View.INVISIBLE);
+                    textViewDinner.setVisibility(View.INVISIBLE);
+                    textViewSupper.setVisibility(View.INVISIBLE);
+                    textViewSecondBreakfast.setVisibility(View.INVISIBLE);
+                    textViewSnack.setVisibility(View.INVISIBLE);
+                    breakfast.setVisibility(View.INVISIBLE);
+                    dinner.setVisibility(View.INVISIBLE);
+                    supper.setVisibility(View.INVISIBLE);
+                    secondBreakfast.setVisibility(View.INVISIBLE);
+                    snack.setVisibility(View.INVISIBLE);
+                    textViewBreakfastTitle.setVisibility(View.INVISIBLE);
+                    textViewDinnerTitle.setVisibility(View.INVISIBLE);
+                    textViewSupperTitle.setVisibility(View.INVISIBLE);
+                    textViewSecondBreakfastTitle.setVisibility(View.INVISIBLE);
+                    textViewSnackTitle.setVisibility(View.INVISIBLE);
+                    imageViewBreakfast.setVisibility(View.INVISIBLE);
+                    imageViewDinner.setVisibility(View.INVISIBLE);
+                    imageViewSupper.setVisibility(View.INVISIBLE);
+                    imageViewSecondBreakfast.setVisibility(View.INVISIBLE);
+                    imageViewSnack.setVisibility(View.INVISIBLE);
 
                 }
             }
@@ -103,16 +130,13 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("breakfast");
         databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("dinner");
         databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("supper");
+        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("secondBreakfast");
+        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("snack");
 
         databaseReferenceBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    textViewBreakfast.setVisibility(View.VISIBLE);
-                    breakfast.setVisibility(View.VISIBLE);
-                    textViewBreakfast.setVisibility(View.VISIBLE);
-                    imageViewBreakfast.setVisibility(View.VISIBLE);
                     keyBreakfast = snapshot.child("key").getValue().toString();
                     recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -133,6 +157,8 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
 
                         }
                     });
+                } else {
+                   breakfast.setVisibility(View.GONE);
                 }
 
             }
@@ -147,13 +173,8 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    textViewSupper.setVisibility(View.VISIBLE);
-                    supper.setVisibility(View.VISIBLE);
-                    textViewSupper.setVisibility(View.VISIBLE);
-                    imageViewSupper.setVisibility(View.VISIBLE);
-                    keyDinner = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
+                    keySupper = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -172,6 +193,8 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
 
                         }
                     });
+                } else {
+                    supper.setVisibility(View.GONE);
                 }
 
             }
@@ -186,13 +209,8 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    textViewDinner.setVisibility(View.VISIBLE);
-                    dinner.setVisibility(View.VISIBLE);
-                    textViewDinner.setVisibility(View.VISIBLE);
-                    imageViewDinner.setVisibility(View.VISIBLE);
-                    keySupper = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
+                    keyDinner = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -211,6 +229,80 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
 
                         }
                     });
+                } else {
+                    dinner.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReferenceSecondBreakfast.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    keySecondBreakfast = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySecondBreakfast);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSecondBreakfast.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSecondBreakfast);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    secondBreakfast.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReferenceSnack.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    keySnack = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySnack);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSnack.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSnack);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    snack.setVisibility(View.GONE);
                 }
 
             }
@@ -273,9 +365,11 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bundle.putString("key", keyBreakfast);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!keyBreakfast.isEmpty()) {
+                    bundle.putString("key", keyBreakfast);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -283,50 +377,98 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         dinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bundle.putString("key", keyDinner);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!keyDinner.isEmpty()) {
+                    bundle.putString("key", keyDinner);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
 
         supper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bundle.putString("key", keySupper);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!keySupper.isEmpty()) {
+                    bundle.putString("key", keySupper);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        secondBreakfast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!keySecondBreakfast.isEmpty()){
+                    bundle.putString("key", keySecondBreakfast);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        snack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!keySnack.isEmpty()) {
+                    bundle.putString("key", keySnack);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
     }
 
     @Override
     public void dayClicked(int position) {
-        Toast.makeText(ShowPlan.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+
+        textViewBreakfast.setText("");
+        textViewDinner.setText("");
+        textViewSupper.setText("");
+        textViewSecondBreakfast.setText("");
+        textViewSnack.setText("");
+
+        imageViewBreakfast.setImageResource(0);
+        imageViewDinner.setImageResource(0);
+        imageViewSupper.setImageResource(0);
+        imageViewSecondBreakfast.setImageResource(0);
+        imageViewSnack.setImageResource(0);
+
+        breakfast.setVisibility(View.VISIBLE);
+        dinner.setVisibility(View.VISIBLE);
+        supper.setVisibility(View.VISIBLE);
+        secondBreakfast.setVisibility(View.VISIBLE);
+        snack.setVisibility(View.VISIBLE);
+
         databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner")
                 .child("day" + (position + 1)).child("breakfast");
         databaseReferenceBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                keyBreakfast = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewBreakfast.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewBreakfast);
-                    }
+                if (snapshot.exists()) {
+                    keyBreakfast = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewBreakfast.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewBreakfast);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    breakfast.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -340,26 +482,30 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceDinner.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                keyDinner = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewDinner.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewDinner);
-                    }
+                if (snapshot.exists()) {
+                    keyDinner = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewDinner.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewDinner);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    dinner.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -373,26 +519,30 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         databaseReferenceSupper.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                keySupper = snapshot.child("key").getValue().toString();
-                recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
-                recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String name = snapshot.child("name").getValue().toString();
-                        textViewSupper.setText(name);
-                        Picasso.with(ShowPlan.this)
-                                .load(snapshot.child("imageUrl").getValue().toString())
-                                .placeholder(R.mipmap.ic_launcher)
-                                .fit()
-                                .centerCrop()
-                                .into(imageViewSupper);
-                    }
+                if (snapshot.exists()) {
+                    keySupper = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSupper.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSupper);
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    supper.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -401,5 +551,83 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
+        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner")
+                .child("day" + (position + 1)).child("secondBreakfast");
+        databaseReferenceSecondBreakfast.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    keySecondBreakfast = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySecondBreakfast);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSecondBreakfast.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSecondBreakfast);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    secondBreakfast.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner")
+                .child("day" + (position + 1)).child("snack");
+        databaseReferenceSnack.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    keySnack = snapshot.child("key").getValue().toString();
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySnack);
+                    recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String name = snapshot.child("name").getValue().toString();
+                            textViewSnack.setText(name);
+                            Picasso.with(ShowPlan.this)
+                                    .load(snapshot.child("imageUrl").getValue().toString())
+                                    .placeholder(R.mipmap.ic_launcher)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(imageViewSnack);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    snack.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
+
 }

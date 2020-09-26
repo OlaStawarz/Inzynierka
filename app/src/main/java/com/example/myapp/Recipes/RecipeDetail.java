@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,6 +54,7 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         final TextView textViewName = findViewById(R.id.textViewRecipeNameDetail);
         final TextView textViewDescription = findViewById(R.id.textViewDisplayDescription);
         final TextView textViewLink = findViewById(R.id.textViewDisplayLink);
+        textViewLink.setMovementMethod(LinkMovementMethod.getInstance());
         final ImageView imageView = findViewById(R.id.imageViewRecipeImageDetail);
         recyclerView = findViewById(R.id.recycler_view_ingredients);
         recyclerView.setHasFixedSize(true);
@@ -252,14 +254,8 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
 
     }
 
-    private void fileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
@@ -267,15 +263,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
             imageUri = data.getData();
             //image.setImageURI(imageUri);
         }
-    }
+    }*/
 
-    private String getExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
-
-    private void uploadImage() {
-
-    }
 }

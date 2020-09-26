@@ -51,6 +51,7 @@ public class ChooseMeal extends AppCompatActivity {
         assert bundle != null;
         day = bundle.getString("day");
         meal = bundle.getString("meal");
+        Toast.makeText(this, meal, Toast.LENGTH_SHORT).show();
 
         filteredList = new ArrayList<>();
 

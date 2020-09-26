@@ -61,6 +61,7 @@ public class RecipesStep4 extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        assert bundle != null;
         category = bundle.getStringArrayList("categoryNext");
         ingredients = bundle.getStringArrayList("ingredients");
         name = bundle.getString("nameNext");

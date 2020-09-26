@@ -111,9 +111,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
                     }
                     arrayAdapter = new IngredientAdapter(items, ShoppingList.this);
                     recyclerView.setAdapter(arrayAdapter);
-                    if (arrayAdapter.getItemCount() == 0)
-                        amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
-                    else if (arrayAdapter.getItemCount() == 1)
+                    if (arrayAdapter.getItemCount() == 1)
                         amountTextView.setText("Na twojej liście znajduje się 1 produkt");
                     else if (arrayAdapter.getItemCount() > 1 && arrayAdapter.getItemCount() < 5)
                         amountTextView.setText("Na twojej liście znajdują się " +
@@ -121,6 +119,8 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
                     else
                         amountTextView.setText("Na twojej liście znajduje się " +
                                 arrayAdapter.getItemCount() + " produktów");
+                } else {
+                    amountTextView.setText("Na twojej liście nie znajdują się obecnie żadne produkty");
                 }
             }
 
@@ -236,6 +236,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
     @Override
     public void confirmAction() {
         databaseReference.removeValue();
+        items.clear();
     }
 
 }

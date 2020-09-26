@@ -216,13 +216,11 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
 
 /*
 package com.example.myapp.Recipes;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -230,20 +228,16 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.example.myapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener,
         RecipeAdapter.OnFavouriteButtonClickListener {
-
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
     private EditText searchRecipeEditText;
@@ -252,37 +246,29 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
     private ImageView imageViewFavourite;
     String category;
     boolean isFavourite = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_recipes);
-
         searchRecipeEditText = findViewById(R.id.editTextSearchRecipe);
         recyclerView = findViewById(R.id.recycler_view);
         imageViewFavourite = findViewById(R.id.imageViewAddToFavourite);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
         category = bundle.getString("category");
         //Toast.makeText(DisplayRecipes.this, category, Toast.LENGTH_LONG).show();
-
         searchRecipeEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0);
         searchRecipeEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
                 String text = editable.toString();
@@ -295,7 +281,6 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
                 recipeAdapter.filterRecipeList(filteredList);
             }
         });
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -338,20 +323,17 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
                                 recipes.add(recipeModel);
                             }
                     }
-
                 }
                 recipeAdapter = new RecipeAdapter(DisplayRecipes.this, recipes,
                         DisplayRecipes.this, DisplayRecipes.this);
                 recyclerView.setAdapter(recipeAdapter);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(DisplayRecipes.this, error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
     @Override
     public void itemClicked(int position) {
         Intent intent = new Intent(DisplayRecipes.this, RecipeDetail.class);
@@ -364,7 +346,6 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
     @Override
     public void addToFavourite(int position) {
         Toast.makeText(this, "do ulubionych", Toast.LENGTH_SHORT).show();
@@ -376,9 +357,5 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
             imageViewFavourite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favorite_add));
             isFavourite = false;
         }*//*
-
-
-
-
     }
 }*/

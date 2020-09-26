@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -53,6 +54,8 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<IngredientModel> ingredients;
+    private ArrayList<String> category;
+    private CheckBox breakfast, dinner, supper, snack;
     Button saveChanges, saveImage;
     FloatingActionButton addIngredient;
     String key;
@@ -69,10 +72,17 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         saveChanges = findViewById(R.id.buttonSaveChanges);
         saveImage = findViewById(R.id.buttonEditRecipeSavePhoto);
         addIngredient = findViewById(R.id.floatingActionBarAddItemRecipe);
+        breakfast = findViewById(R.id.checkBoxEditBreakfast);
+        dinner = findViewById(R.id.checkBoxEditDinner);
+        supper = findViewById(R.id.checkBoxEditSupper);
+        snack = findViewById(R.id.checkBoxEditSnack);
+
         recyclerView = findViewById(R.id.recycler_view_ingredients_edit);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        category = new ArrayList<>();
 
         storageReference = FirebaseStorage.getInstance().getReference("Image");
 
@@ -188,13 +198,19 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
                 databaseReference.child("name").setValue(editTextName.getText().toString());
                 databaseReference.child("description").setValue(editTextDescription.getText().toString());
                 databaseReference.child("link").setValue(editTextLink.getText().toString());
-               /* Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {*/
-
-                //    }
-               // }, 5000);
+                if (breakfast.isChecked()) {
+                    category.add(breakfast.getText().toString());
+                }
+                if (dinner.isChecked()) {
+                    category.add(dinner.getText().toString());
+                }
+                if (supper.isChecked()) {
+                    category.add(supper.getText().toString());
+                }
+                if (snack.isChecked()) {
+                    category.add(snack.getText().toString());
+                }
+                databaseReference.child("category").setValue(category);
                 finish();
             }
         });
