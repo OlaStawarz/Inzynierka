@@ -15,6 +15,8 @@ import com.example.myapp.R;
 import com.example.myapp.ShoppingList.AddItem;
 import com.example.myapp.ShoppingList.IngredientModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +34,9 @@ public class AddIngredientToRecipe extends AppCompatActivity {
     DatabaseReference databaseReference;
     ArrayList<IngredientModel> ingredients;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +49,16 @@ public class AddIngredientToRecipe extends AppCompatActivity {
 
         addItemsToSpinner();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String key = bundle.getString("key");
         ingredients = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key).child("ingredientModels");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key).child("ingredientModels");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

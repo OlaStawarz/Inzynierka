@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.myapp.R;
 import com.example.myapp.Recipes.RecipesStep2;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +27,9 @@ public class EditIngredient extends AppCompatActivity {
     private Button edit;
     private DatabaseReference databaseReference;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +41,12 @@ public class EditIngredient extends AppCompatActivity {
         edit = findViewById(R.id.buttonEditIngredient);
         addItemsToSpinner();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList").child(uid);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();

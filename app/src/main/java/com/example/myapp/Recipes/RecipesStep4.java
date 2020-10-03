@@ -21,6 +21,8 @@ import com.example.myapp.ShoppingList.IngredientModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,7 +30,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class RecipesStep4 extends AppCompatActivity {
@@ -46,13 +47,20 @@ public class RecipesStep4 extends AppCompatActivity {
 
     Uri imageUri;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_step4);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-        storageReference = FirebaseStorage.getInstance().getReference("Image");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid);
+        storageReference = FirebaseStorage.getInstance().getReference("Image").child(uid);
 
         image = findViewById(R.id.imageViewRecipe);
         buttonAddRecipe = findViewById(R.id.buttonAddRecipe);

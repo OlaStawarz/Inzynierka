@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.myapp.R;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class AddPlan extends AppCompatActivity {
     private Button savePlan;
     private Intent intent;
     private Bundle bundle;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

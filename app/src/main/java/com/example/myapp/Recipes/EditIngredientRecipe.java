@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.myapp.R;
 import com.example.myapp.ShoppingList.EditIngredient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +27,8 @@ public class EditIngredientRecipe extends AppCompatActivity {
     private Button edit;
     private DatabaseReference databaseReference;
     String position, key;
+    private FirebaseUser user;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,11 @@ public class EditIngredientRecipe extends AppCompatActivity {
         position = bundle.getString("position");
         key = bundle.getString("key");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key).child("ingredientModels");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key).child("ingredientModels");
 
 
         //Toast.makeText(EditIngredient.this, key, Toast.LENGTH_LONG).show();

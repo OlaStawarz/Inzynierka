@@ -1,13 +1,11 @@
 package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,8 +13,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +20,8 @@ import android.widget.Toast;
 import com.example.myapp.R;
 import com.example.myapp.ShoppingList.IngredientAdapter;
 import com.example.myapp.ShoppingList.IngredientModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +44,9 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
     ArrayList<IngredientModel> ingredients;
     boolean isInPlanner = false;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +63,17 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
         key = bundle.getString("key");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
-        databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
+        databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
 
        // Toast.makeText(RecipeDetail.this, description, Toast.LENGTH_LONG).show();
         /*textViewName.setText(name);
@@ -96,7 +101,7 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
             }
         });
 
-        databaseReferenceIngredients = FirebaseDatabase.getInstance().getReference("Recipes")
+        databaseReferenceIngredients = FirebaseDatabase.getInstance().getReference("Recipes").child(uid)
                 .child(key).child("ingredientModels");
 
         databaseReferenceIngredients.addValueEventListener(new ValueEventListener() {

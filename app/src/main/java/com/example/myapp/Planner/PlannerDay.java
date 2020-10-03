@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.myapp.R;
 import com.example.myapp.ShoppingList.IngredientModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +51,9 @@ public class PlannerDay extends AppCompatActivity {
             recipeDatabaseReference, secondBreakfastDatabaseReference, snackDatabaseReference;
     String key = "";
     private boolean isSecondBreakfast = false, isSnack = false;
+
+    private FirebaseUser user;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,9 @@ public class PlannerDay extends AppCompatActivity {
         textViewSnack.setVisibility(View.INVISIBLE);
         addSecondBreakfast.setVisibility(View.INVISIBLE);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -94,11 +102,11 @@ public class PlannerDay extends AppCompatActivity {
         //Toast.makeText(this, day, Toast.LENGTH_SHORT).show();
 
         assert day != null;
-        breakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("breakfast");
-        dinnerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("dinner");
-        supperDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("supper");
-        snackDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("snack");
-        secondBreakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(day).child("secondBreakfast");
+        breakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("breakfast");
+        dinnerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("dinner");
+        supperDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("supper");
+        snackDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("snack");
+        secondBreakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("secondBreakfast");
 
         checkBoxSnack.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -125,7 +133,7 @@ public class PlannerDay extends AppCompatActivity {
             }
         });
 
-        databaseReferenceShoppingList = FirebaseDatabase.getInstance().getReference("ShoppingList");
+        databaseReferenceShoppingList = FirebaseDatabase.getInstance().getReference("ShoppingList").child(uid);
 
         names = new ArrayList<>();
         keys = new ArrayList<>();
@@ -157,7 +165,7 @@ public class PlannerDay extends AppCompatActivity {
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                     addBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
 
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -200,7 +208,7 @@ public class PlannerDay extends AppCompatActivity {
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                     addDinner.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
 
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -242,7 +250,7 @@ public class PlannerDay extends AppCompatActivity {
                 if(snapshot.exists()) {
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
                     addSupper.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -284,12 +292,8 @@ public class PlannerDay extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
-                    //Toast.makeText(PlannerDay.this, String.valueOf(isSecondBreakfast), Toast.LENGTH_SHORT).show();
-                    if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
-                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
-                    else
-                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -317,7 +321,7 @@ public class PlannerDay extends AppCompatActivity {
                     });
                 } else {
                     Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
-                    addSupper.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
+                    addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
                 }
             }
 
@@ -334,11 +338,8 @@ public class PlannerDay extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     key = Objects.requireNonNull(snapshot.child("key").getValue()).toString();
-                    if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
-                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
-                    else
-                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+                    addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_edit));
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -367,11 +368,7 @@ public class PlannerDay extends AppCompatActivity {
                         }
                     });
                 } else {
-                    //Toast.makeText(PlannerDay.this, "No", Toast.LENGTH_SHORT).show();
-                    if (secondBreakfastTitle.getText().toString().equals("II śniadanie"))
-                        addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
-                    else
-                        addSecondBreakfast.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
+                    addSnack.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_add));
                 }
             }
 
@@ -430,11 +427,7 @@ public class PlannerDay extends AppCompatActivity {
         addSecondBreakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (secondBreakfastTitle.getText().toString().equals("Przekąska")) {
-                    addMealBundle.putString("meal", "snack");
-                } else {
-                    addMealBundle.putString("meal", "secondBreakfast");
-                }
+                addMealBundle.putString("meal", "secondBreakfast");
                 addMealIntent.putExtras(addMealBundle);
                 startActivity(addMealIntent);
             }
@@ -443,11 +436,7 @@ public class PlannerDay extends AppCompatActivity {
         addSnack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (snackTitle.getText().toString().equals("Przekąska")) {
-                    addMealBundle.putString("meal", "snack");
-                } else {
-                    addMealBundle.putString("meal", "secondBreakfast");
-                }
+                addMealBundle.putString("meal", "snack");
                 addMealIntent.putExtras(addMealBundle);
                 startActivity(addMealIntent);
             }
@@ -475,10 +464,10 @@ public class PlannerDay extends AppCompatActivity {
             addSecondBreakfast.setVisibility(View.VISIBLE);
             secondBreakfastTitle.setText("Przekąska");
 
-            snackTitle.setVisibility(View.INVISIBLE);
-            snack.setVisibility(View.INVISIBLE);
-            textViewSnack.setVisibility(View.INVISIBLE);
-            addSnack.setVisibility(View.INVISIBLE);
+            snackTitle.setVisibility(View.GONE);
+            snack.setVisibility(View.GONE);
+            textViewSnack.setVisibility(View.GONE);
+            addSnack.setVisibility(View.GONE);
         } else if (isSecondBreakfast) {
             secondBreakfast.setVisibility(View.VISIBLE);
             secondBreakfastTitle.setVisibility(View.VISIBLE);
@@ -486,10 +475,10 @@ public class PlannerDay extends AppCompatActivity {
             addSecondBreakfast.setVisibility(View.VISIBLE);
             secondBreakfastTitle.setText("II śniadanie");
 
-            snackTitle.setVisibility(View.INVISIBLE);
-            snack.setVisibility(View.INVISIBLE);
-            textViewSnack.setVisibility(View.INVISIBLE);
-            addSnack.setVisibility(View.INVISIBLE);
+            snackTitle.setVisibility(View.GONE);
+            snack.setVisibility(View.GONE);
+            textViewSnack.setVisibility(View.GONE);
+            addSnack.setVisibility(View.GONE);
         }  else {
             secondBreakfast.setVisibility(View.INVISIBLE);
             secondBreakfastTitle.setVisibility(View.INVISIBLE);
@@ -545,7 +534,7 @@ public class PlannerDay extends AppCompatActivity {
                         break;
                     }
                     case "ml": {
-                        Double newAmount = amount / 100 + amounts.get(index);
+                        Double newAmount = amount / 1000 + amounts.get(index);
                         amounts.set(index, newAmount);
                         break;
                     }
@@ -553,6 +542,32 @@ public class PlannerDay extends AppCompatActivity {
                         Double newAmount = 0.25 + amounts.get(index);
                         amounts.set(index, newAmount);
                         break;
+                    }
+                }
+            } else if (ingredientUnit.equals("ml")) {
+                if (unit.equals("l")) {
+                    double newAmount = amount + (amounts.get(index) / 1000);
+                    amounts.set(index, newAmount);
+                    units.set(index, "l");
+                } else  {
+                    double newAmount = 0;
+                    switch (unit) {
+                        case "ml": {
+                            newAmount = amount + amounts.get(index);
+                            break;
+                        }
+                        case "szklanka": {
+                            newAmount = 250 + amounts.get(index);
+                            break;
+                        }
+
+                    }
+                    if (newAmount < 1000.0) {
+                        amounts.set(index, newAmount);
+                        units.set(index, "ml");
+                    } else {
+                        amounts.set(index, newAmount/1000);
+                        units.set(index, "l");
                     }
                 }
             } else if (ingredientUnit.equals("g")) {
@@ -632,13 +647,13 @@ public class PlannerDay extends AppCompatActivity {
                     break;
                 }
                 case "ml": {
-                    amounts.add(amount / 100);
-                    units.add("l");
+                    amounts.add(amount);
+                    units.add("ml");
                     break;
                 }
                 case "szklanka": {
-                    amounts.add(0.25);
-                    units.add("l");
+                    amounts.add(250.0);
+                    units.add("ml");
                     break;
                 }
             }

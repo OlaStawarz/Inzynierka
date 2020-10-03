@@ -1,135 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Recipes.Recipes">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/horizontal_recycler_view"
-        android:layout_width="350dp"
-        android:layout_height="157dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewRecentlyAdded" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textViewRecentlyAdded"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Ostatnio dodane"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/breakfast_card_view"
-        android:layout_width="150dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="8sp"
-        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSearchByCateghory">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/horizontal_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRecentlyAdded" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Śniadania"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textViewRecentlyAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Ostatnio dodane"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/breakfast_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="230dp"
+                android:backgroundTint="@color/grey_color"
+                app:cardCornerRadius="8sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/textViewSearchByCateghory">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/dinner_card_view"
-        android:layout_width="150dp"
-        android:layout_height="80dp"
-        app:cardCornerRadius="8sp"
-        app:layout_constraintEnd_toEndOf="@+id/horizontal_recycler_view"
-        app:layout_constraintTop_toTopOf="@+id/breakfast_card_view">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Śniadania"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Obiady"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
 
-    </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/dinner_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginStart="230dp"
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="@color/grey_color"
+                app:cardCornerRadius="8sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/breakfast_card_view">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/supper_card_view"
-        android:layout_width="150dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="8sp"
-        app:layout_constraintStart_toStartOf="@+id/breakfast_card_view"
-        app:layout_constraintTop_toBottomOf="@+id/breakfast_card_view">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Obiady"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Kolacje"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
 
-    </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/supper_card_view"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="230dp"
+                android:backgroundTint="@color/grey_color"
+                app:cardCornerRadius="8sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/breakfast_card_view">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Kolacje"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </androidx.cardview.widget.CardView>
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/snack_card_view"
-        android:layout_width="150dp"
-        android:layout_height="80dp"
-        app:cardCornerRadius="8sp"
-        app:layout_constraintStart_toStartOf="@+id/dinner_card_view"
-        app:layout_constraintTop_toTopOf="@+id/supper_card_view">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/snack_card_view"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="230dp"
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="@color/grey_color"
+                app:cardCornerRadius="8sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/supper_card_view">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Inne"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Inne"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-    </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/all_recipes_card_view"
-        android:layout_width="350dp"
-        android:layout_height="77dp"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="8sp"
-        app:layout_constraintEnd_toEndOf="@+id/snack_card_view"
-        app:layout_constraintStart_toStartOf="@+id/supper_card_view"
-        app:layout_constraintTop_toBottomOf="@+id/supper_card_view">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/all_recipes_card_view"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:backgroundTint="@color/grey_color"
+                app:cardCornerRadius="8sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/supper_card_view">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Wszystkie przepisy"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Wszystkie przepisy"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-    </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addRecipeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:clickable="true"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/snack_card_view"
+                app:layout_constraintTop_toBottomOf="@+id/all_recipes_card_view"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/textViewSearchByCateghory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Przeglądaj według kategorii"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/horizontal_recycler_view" />
+
+            <TextView
+                android:id="@+id/textViewAddNewRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:text="Dodaj nowy przepis"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/addRecipeButton"
+                app:layout_constraintEnd_toStartOf="@+id/addRecipeButton"
+                app:layout_constraintTop_toTopOf="@+id/addRecipeButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
@@ -138,27 +210,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_naviagation" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addRecipeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:src="@drawable/ic_add"
-        android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="@+id/snack_card_view"
-        tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/textViewSearchByCateghory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Przeglądaj według kategorii"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/horizontal_recycler_view"
-        app:layout_constraintTop_toBottomOf="@+id/horizontal_recycler_view" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

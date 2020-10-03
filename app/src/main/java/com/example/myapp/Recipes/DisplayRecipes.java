@@ -2,7 +2,6 @@ package com.example.myapp.Recipes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener,
         RecipeAdapter.OnFavouriteButtonClickListener {
@@ -36,6 +36,9 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
     String category;
     boolean isFavourite = false;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,12 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         imageViewFavourite = findViewById(R.id.imageViewAddToFavourite);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -114,7 +122,7 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
                             break;
                         case "snack":
                             for (int i = 0; i < recipeModel.getCategory().size(); i++) {
-                                if (recipeModel.getCategory().get(i).equals("Przekąski")) {
+                                if (recipeModel.getCategory().get(i).equals("Inne")) {
                                     recipes.add(recipeModel);
                                 }
                             }

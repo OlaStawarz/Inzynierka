@@ -9,15 +9,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.myapp.Planner.ChooseMeal;
 import com.example.myapp.Planner.Planner;
+import com.example.myapp.Planner.RecipePlannerAdapter;
 import com.example.myapp.R;
 import com.example.myapp.ShoppingList.ShoppingList;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapter.OnHorizontalItemClickedListener{
+public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapter.OnHorizontalItemClickedListener {
 
     CardView breakfastCardView, dinnerCardView, supperCardView, snackCardView, allRecipesCardView;
     Intent intent;
@@ -36,6 +42,10 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
     DatabaseReference databaseReference;
     ArrayList<RecipeModel> recipes;
     HorizontalRecipeAdapter recipeAdapter;
+
+    private FirebaseUser user;
+    private FirebaseAuth auth;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +62,19 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
         allRecipesCardView = findViewById(R.id.all_recipes_card_view);
         recyclerView = findViewById(R.id.horizontal_recycler_view);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
+        auth = FirebaseAuth.getInstance();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(Recipes.this,
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
         Query query = databaseReference.limitToLast(5);
         query.addValueEventListener(new ValueEventListener() {
@@ -81,6 +98,7 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
             }
         });
 
+
         intent = new Intent(Recipes.this, DisplayRecipes.class);
         bundle = new Bundle();
 
@@ -90,11 +108,13 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.shopping_list:
-                        startActivity(new Intent(getApplicationContext(), ShoppingList.class));
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), ShoppingList.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.meal_planner:
-                        startActivity(new Intent(getApplicationContext(), Planner.class));
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), Planner.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.recipes:
@@ -176,5 +196,23 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
         //Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_signout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.signout) {
+            auth.signOut();
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

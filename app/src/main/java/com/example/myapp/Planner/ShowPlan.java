@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.myapp.R;
 import com.example.myapp.Recipes.RecipeDetail;
 import com.example.myapp.Recipes.RecipeModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +49,9 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
     Bundle bundle;
 
     LinearLayout linearLayout;
+
+    private FirebaseUser user;
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +86,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         secondBreakfast = findViewById(R.id.cardViewAddSecondBreakfastShowPlan);
         snack = findViewById(R.id.cardViewAddSnackShowPlan);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
 
         intent = new Intent(ShowPlan.this, RecipeDetail.class);
         bundle = new Bundle();
 
-        databaseReferenceT = FirebaseDatabase.getInstance().getReference("Planner");
+        databaseReferenceT = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
         databaseReferenceT.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -127,18 +135,18 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         });
 
         // show first day when open activity
-        databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("breakfast");
-        databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("dinner");
-        databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("supper");
-        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("secondBreakfast");
-        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner").child("day1").child("snack");
+        databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("breakfast");
+        databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("dinner");
+        databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("supper");
+        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("secondBreakfast");
+        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("snack");
 
         databaseReferenceBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keyBreakfast = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keyBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -174,7 +182,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySupper = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySupper);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -210,7 +218,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keyDinner = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keyDinner);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -246,7 +254,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySecondBreakfast = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySecondBreakfast);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySecondBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -282,7 +290,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySnack = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySnack);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySnack);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -314,7 +322,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         });
 
         // show plan from another days
-        databaseReference = FirebaseDatabase.getInstance().getReference("Planner");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -440,14 +448,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         secondBreakfast.setVisibility(View.VISIBLE);
         snack.setVisibility(View.VISIBLE);
 
-        databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner")
+        databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("breakfast");
         databaseReferenceBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keyBreakfast = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyBreakfast);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keyBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -477,14 +485,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner")
+        databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("dinner");
         databaseReferenceDinner.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keyDinner = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keyDinner);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keyDinner);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -514,14 +522,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner")
+        databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("supper");
         databaseReferenceSupper.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySupper = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySupper);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySupper);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -551,14 +559,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner")
+        databaseReferenceSecondBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("secondBreakfast");
         databaseReferenceSecondBreakfast.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySecondBreakfast = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySecondBreakfast);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySecondBreakfast);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -589,14 +597,14 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner")
+        databaseReferenceSnack = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("snack");
         databaseReferenceSnack.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     keySnack = snapshot.child("key").getValue().toString();
-                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(keySnack);
+                    recipeDatabaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(keySnack);
                     recipeDatabaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

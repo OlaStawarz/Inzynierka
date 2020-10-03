@@ -128,6 +128,9 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
         units.add("łyżka");
         units.add("łyżeczka");
         units.add("szczypta");
+        units.add("l");
+        units.add("ml");
+        units.add("szklanka");
         spinnerUnit.setAdapter(new ArrayAdapter<>(RecipesStep2.this,
                 android.R.layout.simple_spinner_dropdown_item, units));
     }

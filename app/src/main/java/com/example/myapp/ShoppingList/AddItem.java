@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.example.myapp.Planner.Planner;
 import com.example.myapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,9 @@ public class AddItem extends AppCompatActivity {
     private double newAmount;
     private String newUnit;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +55,11 @@ public class AddItem extends AppCompatActivity {
         amounts = new ArrayList<>();
         units = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList").child(uid);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,11 +124,11 @@ public class AddItem extends AppCompatActivity {
                                 if (newItem.getUnit().equals("l")) {
                                     newAmount = amount + newItem.getAmount();
                                 } else if (newItem.getUnit().equals("ml")) {
-                                    newAmount = amount + newItem.getAmount() / 100;
+                                    newAmount = amount + newItem.getAmount() / 1000;
                                 }
                             } else if (unit.equals("ml")) {
                                 if (newItem.getUnit().equals("l")) {
-                                    newAmount = amount / 100 + newItem.getAmount();
+                                    newAmount = amount / 1000 + newItem.getAmount();
                                     newUnit = "l";
                                 } else {
                                     if (newItem.getUnit().equals("ml")) {
@@ -129,7 +138,7 @@ public class AddItem extends AppCompatActivity {
                                         newUnit = "ml";
                                     } else {
                                         newUnit = "l";
-                                        newAmount /= 100;
+                                        newAmount /= 1000;
                                     }
                                 }
                             } else {

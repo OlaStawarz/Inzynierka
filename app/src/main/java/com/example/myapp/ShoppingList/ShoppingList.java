@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapp.Planner.Planner;
 import com.example.myapp.R;
@@ -27,6 +27,8 @@ import com.example.myapp.Recipes.Recipes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +52,10 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
     private DatabaseReference databaseReference;
     BottomNavigationView bottomNavigationView;
 
+    private FirebaseUser user;
+    private FirebaseAuth auth;
+    String uid;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,12 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
+
+        auth = FirebaseAuth.getInstance();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
 
         filteredList = new ArrayList<>();
 
@@ -97,7 +109,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList");
+        databaseReference = FirebaseDatabase.getInstance().getReference("ShoppingList").child(uid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -140,11 +152,13 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
                     case R.id.shopping_list:
                         return true;
                     case R.id.meal_planner:
-                        startActivity(new Intent(getApplicationContext(), Planner.class));
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), Planner.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.recipes:
-                        startActivity(new Intent(getApplicationContext(), Recipes.class));
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), Recipes.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                         overridePendingTransition(0, 0);
                         return true;
                 }
@@ -237,6 +251,24 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
     public void confirmAction() {
         databaseReference.removeValue();
         items.clear();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_signout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.signout) {
+            auth.signOut();
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
 }

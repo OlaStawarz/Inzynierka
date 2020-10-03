@@ -12,11 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/editTextIngredient"
-        app:layout_constraintTop_toBottomOf="@+id/floatingActionButtonAdd" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUnitRecipe" />
 
     <TextView
         android:id="@+id/textViewEnterIngredients"
@@ -31,26 +32,29 @@
 
     <EditText
         android:id="@+id/editTextIngredient"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=""
-        app:layout_constraintStart_toStartOf="@+id/textViewEnterIngredients"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewEnterIngredients" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="30dp"
         android:backgroundTint="@color/colorPrimary"
         android:clickable="true"
         android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerUnitRecipe"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAmountRecipe" />
+        app:layout_constraintTop_toTopOf="@+id/spinnerUnitRecipe" />
 
     <Button
         android:id="@+id/buttonNext2"
@@ -77,16 +81,16 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
         android:text="Jednostka"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <EditText
         android:id="@+id/editTextAmountRecipe"
-        android:layout_width="66dp"
-        android:layout_height="46dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="numberDecimal"
@@ -95,10 +99,9 @@
 
     <Spinner
         android:id="@+id/spinnerUnitRecipe"
-        android:layout_width="167dp"
-        android:layout_height="43dp"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
         app:layout_constraintBottom_toBottomOf="@+id/editTextAmountRecipe"
-        app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonAdd"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/editTextAmountRecipe" />
 

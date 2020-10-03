@@ -11,7 +11,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -21,14 +20,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myapp.R;
-import com.example.myapp.ShoppingList.EditIngredient;
 import com.example.myapp.ShoppingList.IngredientAdapter;
 import com.example.myapp.ShoppingList.IngredientModel;
-import com.example.myapp.ShoppingList.ShoppingList;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +59,9 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
     FloatingActionButton addIngredient;
     String key;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +86,18 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
 
         category = new ArrayList<>();
 
-        storageReference = FirebaseStorage.getInstance().getReference("Image");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        storageReference = FirebaseStorage.getInstance().getReference("Image").child(uid);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         key = bundle.getString("key");
         //Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
 
         addIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +145,7 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
             }
         });
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(key);
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -160,7 +168,7 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
             }
         });
 
-        databaseReferenceIngredients = FirebaseDatabase.getInstance().getReference("Recipes")
+        databaseReferenceIngredients = FirebaseDatabase.getInstance().getReference("Recipes").child(uid)
                 .child(key).child("ingredientModels");
 
         databaseReferenceIngredients.addValueEventListener(new ValueEventListener() {
@@ -194,23 +202,31 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean isChange = false;
                 Toast.makeText(EditRecipe.this, "Edytowanie...", Toast.LENGTH_SHORT).show();
+
                 databaseReference.child("name").setValue(editTextName.getText().toString());
                 databaseReference.child("description").setValue(editTextDescription.getText().toString());
                 databaseReference.child("link").setValue(editTextLink.getText().toString());
                 if (breakfast.isChecked()) {
                     category.add(breakfast.getText().toString());
+                    isChange = true;
                 }
                 if (dinner.isChecked()) {
                     category.add(dinner.getText().toString());
+                    isChange = true;
                 }
                 if (supper.isChecked()) {
                     category.add(supper.getText().toString());
+                    isChange = true;
                 }
                 if (snack.isChecked()) {
                     category.add(snack.getText().toString());
+                    isChange = true;
                 }
-                databaseReference.child("category").setValue(category);
+
+                if (isChange)
+                    databaseReference.child("category").setValue(category);
                 finish();
             }
         });

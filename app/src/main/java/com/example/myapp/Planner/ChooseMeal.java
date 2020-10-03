@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.myapp.R;
 import com.example.myapp.Recipes.RecipeDetail;
 import com.example.myapp.Recipes.RecipeModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,9 @@ public class ChooseMeal extends AppCompatActivity {
     private EditText searchRecipeEditText;
     String day, meal;
 
+    private FirebaseUser user;
+    String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +48,13 @@ public class ChooseMeal extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view_recipes_planner);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-        plannerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        uid = user.getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid);
+        plannerDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
