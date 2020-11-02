@@ -183,17 +183,9 @@ public class Recipes extends AppCompatActivity implements HorizontalRecipeAdapte
 
     @Override
     public void horizontalItemClicked(int position) {
-        Toast.makeText(Recipes.this, "Clicked", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(Recipes.this, RecipeDetail.class);
         Bundle bundle = new Bundle();
-        bundle.putString("name", recipes.get(position).getName());
-        bundle.putString("image", recipes.get(position).getImageUrl());
-        bundle.putStringArrayList("ingredients", recipes.get(position).getIngredients());
-        bundle.putString("description", recipes.get(position).getDescription());
-        bundle.putString("link", recipes.get(position).getLink());
         bundle.putString("key", recipes.get(position).getRecipeKey());
-
-        //Toast.makeText(Recipes.this, recipes.get(position).getDescription(), Toast.LENGTH_LONG).show();
         intent.putExtras(bundle);
         startActivity(intent);
     }

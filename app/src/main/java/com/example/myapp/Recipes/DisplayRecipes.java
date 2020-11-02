@@ -24,8 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener,
-        RecipeAdapter.OnFavouriteButtonClickListener {
+public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.OnItemClickedListener {
 
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
@@ -46,7 +45,6 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
 
         searchRecipeEditText = findViewById(R.id.editTextSearchRecipe);
         recyclerView = findViewById(R.id.recycler_view);
-        imageViewFavourite = findViewById(R.id.imageViewAddToFavourite);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -135,7 +133,7 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
 
                 }
                 recipeAdapter = new RecipeAdapter(DisplayRecipes.this, recipes,
-                        DisplayRecipes.this, DisplayRecipes.this);
+                        DisplayRecipes.this);
                 recyclerView.setAdapter(recipeAdapter);
             }
 
@@ -204,20 +202,6 @@ public class DisplayRecipes extends AppCompatActivity implements RecipeAdapter.O
         startActivity(intent);*/
     }
 
-    @Override
-    public void addToFavourite(int position) {
-        Toast.makeText(this, "do ulubionych", Toast.LENGTH_SHORT).show();
-        /*if (!isFavourite) {
-            imageViewFavourite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favorite));
-            isFavourite = true;
-        } else {
-            imageViewFavourite.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_favorite_add));
-            isFavourite = false;
-        }*/
-
-
-
-    }
 
 
 }

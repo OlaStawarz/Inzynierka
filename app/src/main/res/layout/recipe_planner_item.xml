@@ -48,8 +48,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/round_button"
+                android:background="@drawable/dark_round_button"
                 android:text="Wybierz"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -59,8 +61,10 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/round_button"
+                android:background="@drawable/dark_round_button"
                 android:text="Zobacz przepis"
+                android:textSize="18sp"
+                android:textColor="#ffffff"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

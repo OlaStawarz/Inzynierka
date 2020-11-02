@@ -9,22 +9,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForgetPassword"></activity>
-        <activity android:name=".Register" />
+        <activity android:name=".Planner.RecipeDetailPlanner"></activity>
+        <activity
+            android:name=".ForgetPassword"
+            android:parentActivityName=".Login" />
+        <activity
+            android:name=".Register"
+            android:parentActivityName=".Login" />
         <activity android:name=".Login" />
         <activity android:name=".Recipes.AddIngredientToRecipe" />
         <activity android:name=".Recipes.EditIngredientRecipe" />
         <activity android:name=".Recipes.EditRecipe" />
-        <activity android:name=".Planner.ShowPlan" />
+        <activity
+            android:name=".Planner.ShowPlan"
+            android:parentActivityName=".Planner.Planner" />
         <activity android:name=".Planner.ChooseMeal" />
         <activity android:name=".Planner.PlannerDay" />
-        <activity android:name=".Planner.AddPlan" />
-        <activity android:name=".ShoppingList.EditIngredient" />
-        <activity android:name=".ShoppingList.AddItem" />
-        <activity android:name=".Recipes.RecipeDetail" />
         <activity
-            android:name=".Recipes.DisplayRecipes"
-            android:parentActivityName=".Recipes.Recipes" />
+            android:name=".Planner.AddPlan"
+            android:parentActivityName=".Planner.Planner" />
+        <activity
+            android:name=".ShoppingList.EditIngredient"
+            android:parentActivityName=".ShoppingList.ShoppingList" />
+        <activity
+            android:name=".ShoppingList.AddItem"
+            android:parentActivityName=".ShoppingList.ShoppingList" />
+        <activity android:name=".Recipes.RecipeDetail" />
+        <activity android:name=".Recipes.DisplayRecipes" />
         <activity android:name=".Recipes.RecipesStep4" />
         <activity android:name=".Recipes.RecipesStep3" />
         <activity

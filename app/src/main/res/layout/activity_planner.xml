@@ -19,22 +19,12 @@
         app:menu="@menu/menu_naviagation" />
 
 
-    <ImageView
-        android:id="@+id/imageViewBackgroundWaves"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:background="@drawable/ic_wave"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
+        android:background="@drawable/background_layout"
         android:orientation="horizontal"
-        android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -55,50 +45,35 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/textViewNoPlan"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/buttonPlan"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/dark_round_button"
         android:text="Utwórz nowy plan"
-        android:textSize="20sp"
+        android:textSize="18sp"
+        android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewBackgroundWaves" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
     <Button
-            android:id="@+id/buttonPlan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/round_button"
-            android:text="Planuj"
-            app:layout_constraintEnd_toEndOf="@+id/textViewNoPlan"
-            app:layout_constraintStart_toStartOf="@+id/textViewNoPlan"
-            app:layout_constraintTop_toBottomOf="@+id/textViewNoPlan" />
-
-        <TextView
-            android:id="@+id/textViewCurrentPlan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:text="Zobacz aktualny plan"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonPlan" />
-
-        <Button
-            android:id="@+id/buttonSeePlan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/round_button"
-            android:text="Zobacz"
-            app:layout_constraintEnd_toEndOf="@+id/textViewCurrentPlan"
-            app:layout_constraintStart_toStartOf="@+id/textViewCurrentPlan"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCurrentPlan" />
+        android:id="@+id/buttonSeePlan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/dark_round_button"
+        android:text="Zobacz aktualny plan"
+        android:textSize="18sp"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlan" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

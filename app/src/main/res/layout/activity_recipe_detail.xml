@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/curved_layout"
-            android:backgroundTint="#f5f5f5"
+            android:backgroundTint="@color/grey_color"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewRecipeImageDetail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

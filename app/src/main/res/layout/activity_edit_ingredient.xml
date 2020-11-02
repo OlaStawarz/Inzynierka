@@ -6,25 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".ShoppingList.EditIngredient">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutEditIngredient"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/background_layout"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Edytuj składnik"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/textViewAddNameShoppingList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:text="Edytuj nazwę"
+        android:layout_marginTop="20dp"
+        android:text="Nazwa"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayoutEditIngredient" />
 
     <EditText
         android:id="@+id/editTextEditName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="chleb"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textViewAddNameShoppingList"
         app:layout_constraintTop_toBottomOf="@+id/textViewAddNameShoppingList" />
 
@@ -40,8 +65,8 @@
 
     <EditText
         android:id="@+id/editTextEditAmount"
-        android:layout_width="109dp"
-        android:layout_height="42dp"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="numberDecimal"
@@ -52,28 +77,33 @@
         android:id="@+id/textViewAddUnitShoppingList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="160dp"
         android:text="Jednostka"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewAddAmountShoppingList"
         app:layout_constraintTop_toTopOf="@+id/textViewAddAmountShoppingList" />
 
     <Spinner
         android:id="@+id/spinnerEditUnit"
-        android:layout_width="179dp"
-        android:layout_height="42dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/editTextEditAmount"
-        app:layout_constraintEnd_toEndOf="@+id/textViewAddUnitShoppingList"
+        app:layout_constraintStart_toStartOf="@+id/textViewAddUnitShoppingList"
         app:layout_constraintTop_toTopOf="@+id/editTextEditAmount" />
 
     <Button
         android:id="@+id/buttonEditIngredient"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/round_button"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/dark_round_button"
         android:text="Edytuj"
-        app:layout_constraintEnd_toEndOf="@+id/spinnerEditUnit"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerEditUnit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

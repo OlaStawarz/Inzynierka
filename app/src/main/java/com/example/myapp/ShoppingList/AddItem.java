@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ public class AddItem extends AppCompatActivity {
 
     private EditText nameEditText, amountEditText;
     private Spinner unitSpinner;
-    FloatingActionButton addItem;
+    private Button addItem;
     private DatabaseReference databaseReference;
     IngredientModel newItem, item;
     private boolean updated = false;

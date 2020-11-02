@@ -31,12 +31,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay1"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="40dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="50dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="#f5f5f5"
             app:cardCornerRadius="25dp"
+            app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIsAddedDay1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNumberOfDays">
 
@@ -47,17 +49,33 @@
                 android:layout_gravity="center"
                 android:text="Dzień 1"
                 android:textSize="25sp" />
+
         </androidx.cardview.widget.CardView>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonIsAddedDay1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardViewDay1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay1" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay2"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="40dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="#f5f5f5"
             app:cardCornerRadius="25dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cardViewDay1">
+            app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIsAddedDay2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay1">
 
             <TextView
                 android:id="@+id/textViewDay2"
@@ -68,15 +86,29 @@
                 android:textSize="25sp" />
         </androidx.cardview.widget.CardView>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonIsAddedDay2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardViewDay2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay2" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay3"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="25dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="#f5f5f5"
-            app:layout_constraintStart_toStartOf="@+id/cardViewDay1"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewDay1">
+            app:cardCornerRadius="25dp"
+            app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIsAddedDay3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay2">
 
             <TextView
                 android:id="@+id/textViewDay3"
@@ -87,14 +119,29 @@
                 android:textSize="25sp" />
         </androidx.cardview.widget.CardView>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonIsAddedDay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardViewDay3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay3" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewDay4"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
-            app:cardCornerRadius="25dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:backgroundTint="#f5f5f5"
-            app:layout_constraintStart_toStartOf="@+id/cardViewDay2"
-            app:layout_constraintTop_toTopOf="@+id/cardViewDay3">
+            app:cardCornerRadius="25dp"
+            app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIsAddedDay4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewDay3">
 
             <TextView
                 android:id="@+id/textViewDay4"
@@ -105,14 +152,32 @@
                 android:textSize="25sp" />
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/buttonSavePlan"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonIsAddedDay4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardViewDay4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardViewDay4" />
+
+        <Button
+            android:id="@+id/buttonSavePlan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/round_button"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/dark_round_button"
             android:text="Zapisz"
-            app:layout_constraintEnd_toEndOf="@+id/cardViewDay4"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardViewDay4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

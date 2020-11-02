@@ -6,26 +6,68 @@
     android:layout_height="match_parent"
     tools:context=".Recipes.RecipesStep1">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutStep1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@drawable/background_layout"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textViewStep1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="20dp"
+            android:text="Krok 1"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Wprowadź nazwę i wybierz kategorie."
+            android:textColor="#fff"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewStep1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/textViewEnterName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Wprowadź nazwę przepisu"
+        android:text="Nazwa"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayoutStep1" />
 
     <EditText
         android:id="@+id/editTextName"
-        android:layout_width="347dp"
-        android:layout_height="46dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
-        android:hint="Omlet bananowy"
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textViewEnterName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewEnterName" />
 
     <TextView
@@ -33,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Wybierz kategorie"
+        android:text="Kategoria"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/editTextName"
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
@@ -79,13 +121,17 @@
 
     <Button
         android:id="@+id/buttonNext1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/round_button"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/dark_round_button"
         android:text="Dalej"
+        android:textSize="18sp"
+        android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxSnack" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

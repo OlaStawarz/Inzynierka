@@ -1,6 +1,7 @@
 package com.example.myapp.Planner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -8,7 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,31 +34,34 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter.OnHorizontalItemClickListener {
 
-    RecyclerView recyclerView;
-    ArrayList<DayModel> arrayList;
-    HorizontalDaysAdapter daysAdapter;
-    TextView textViewBreakfast, textViewDinner, textViewSupper, textViewBreakfastTitle,
+    private RecyclerView recyclerView;
+    private ArrayList<DayModel> arrayList;
+    private HorizontalDaysAdapter daysAdapter;
+    private TextView textViewBreakfast, textViewDinner, textViewSupper, textViewBreakfastTitle,
             textViewDinnerTitle, textViewSupperTitle, isPlanExist, textViewSecondBreakfast, textViewSecondBreakfastTitle,
-            textViewSnackTitle, textViewSnack;
-    CardView breakfast, dinner, supper, secondBreakfast, snack;
-    ImageView imageViewBreakfast, imageViewDinner, imageViewSupper, imageViewSecondBreakfast, imageViewSnack;
-    DatabaseReference recipeDatabaseReference, databaseReference, databaseReferenceBreakfast,
+            textViewSnackTitle, textViewSnack, date;
+    private CardView breakfast, dinner, supper, secondBreakfast, snack;
+    private ImageView imageViewBreakfast, imageViewDinner, imageViewSupper, imageViewSecondBreakfast, imageViewSnack;
+    private DatabaseReference recipeDatabaseReference, databaseReference, databaseReferenceBreakfast,
                         databaseReferenceDinner, databaseReferenceSupper, databaseReferenceT,
                         databaseReferenceSecondBreakfast, databaseReferenceSnack;
-    String[] daysNumbers;
-    String keyBreakfast = "", keyDinner = "", keySupper = "", keySecondBreakfast = "", keySnack = "";
 
-    Intent intent;
-    Bundle bundle;
+    private ArrayList<String> daysNumbers;
+    private String keyBreakfast = "", keyDinner = "", keySupper = "", keySecondBreakfast = "", keySnack = "",
+                    day1, day2, day3, day4;
 
-    LinearLayout linearLayout;
+    private Intent intent;
+    private Bundle bundle;
 
     private FirebaseUser user;
-    String uid;
+    private String uid;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +87,6 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         textViewSnackTitle = findViewById(R.id.textViewChosenSnackPlanner);
 
         isPlanExist = findViewById(R.id.textViewIfPlanExist);
-        linearLayout = findViewById(R.id.linearLayoutShowPlan);
 
         breakfast = findViewById(R.id.cardViewAddBreakfast);
         dinner = findViewById(R.id.cardViewAddDinner);
@@ -86,45 +94,26 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         secondBreakfast = findViewById(R.id.cardViewAddSecondBreakfastShowPlan);
         snack = findViewById(R.id.cardViewAddSnackShowPlan);
 
+        date = findViewById(R.id.textViewDate);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
         uid = user.getUid();
 
-        intent = new Intent(ShowPlan.this, RecipeDetail.class);
+        intent = new Intent(ShowPlan.this, RecipeDetailPlanner.class);
         bundle = new Bundle();
+
+
 
         databaseReferenceT = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
         databaseReferenceT.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    isPlanExist.setText("Ustalony plan posiłków");
-                    Toast.makeText(ShowPlan.this, "jest", Toast.LENGTH_SHORT).show();
+                    isPlanExist.setText("Ustalony plan na dzień: ");
                 } else {
-                    Toast.makeText(ShowPlan.this, "nie jest", Toast.LENGTH_SHORT).show();
                     isPlanExist.setText("Obecnie nie posiadasz żadnego planu.");
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    textViewBreakfast.setVisibility(View.INVISIBLE);
-                    textViewDinner.setVisibility(View.INVISIBLE);
-                    textViewSupper.setVisibility(View.INVISIBLE);
-                    textViewSecondBreakfast.setVisibility(View.INVISIBLE);
-                    textViewSnack.setVisibility(View.INVISIBLE);
-                    breakfast.setVisibility(View.INVISIBLE);
-                    dinner.setVisibility(View.INVISIBLE);
-                    supper.setVisibility(View.INVISIBLE);
-                    secondBreakfast.setVisibility(View.INVISIBLE);
-                    snack.setVisibility(View.INVISIBLE);
-                    textViewBreakfastTitle.setVisibility(View.INVISIBLE);
-                    textViewDinnerTitle.setVisibility(View.INVISIBLE);
-                    textViewSupperTitle.setVisibility(View.INVISIBLE);
-                    textViewSecondBreakfastTitle.setVisibility(View.INVISIBLE);
-                    textViewSnackTitle.setVisibility(View.INVISIBLE);
-                    imageViewBreakfast.setVisibility(View.INVISIBLE);
-                    imageViewDinner.setVisibility(View.INVISIBLE);
-                    imageViewSupper.setVisibility(View.INVISIBLE);
-                    imageViewSecondBreakfast.setVisibility(View.INVISIBLE);
-                    imageViewSnack.setVisibility(View.INVISIBLE);
-
+                    setVisibility();
                 }
             }
 
@@ -134,7 +123,49 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        // show first day when open activity
+        databaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                daysNumbers = new ArrayList<>();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.getKey().equals("day1")) {
+                        daysNumbers.add("Dzień 1");
+                        day1 = snapshot.child("day1").child("date").getValue().toString();
+                        date.setText(day1);
+                    } else if (dataSnapshot.getKey().equals("day2")) {
+                        daysNumbers.add("Dzień 2");
+                        day2 = snapshot.child("day2").child("date").getValue().toString();
+                    } else if (dataSnapshot.getKey().equals("day3")) {
+                        daysNumbers.add("Dzień 3");
+                        day3 = snapshot.child("day3").child("date").getValue().toString();
+                    } else if (dataSnapshot.getKey().equals("day4")) {
+                        daysNumbers.add("Dzień 4");
+                        day4 = snapshot.child("day4").child("date").getValue().toString();
+                    }
+                }
+
+                arrayList = new ArrayList<>();
+                for (int i = 0; i < daysNumbers.size(); i++) {
+                    DayModel dayModel = new DayModel(daysNumbers.get(i));
+                    arrayList.add(dayModel);
+                }
+                LinearLayoutManager layoutManager = new LinearLayoutManager(ShowPlan.this, LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+                daysAdapter = new HorizontalDaysAdapter(ShowPlan.this, arrayList, ShowPlan.this);
+                recyclerView.setAdapter(daysAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // show first day when opens activity
         databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("breakfast");
         databaseReferenceDinner = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("dinner");
         databaseReferenceSupper = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child("day1").child("supper");
@@ -321,55 +352,6 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
             }
         });
 
-        // show plan from another days
-        databaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                long children = snapshot.getChildrenCount();
-                Toast.makeText(ShowPlan.this, String.valueOf(children), Toast.LENGTH_SHORT).show();
-                daysNumbers = new String[(int)children];
-
-                if (snapshot.hasChild("day1") && !snapshot.hasChild("day2")) {
-                    daysNumbers[0] = "Dzień 1";
-                } else if (snapshot.hasChild("day1") && snapshot.hasChild("day2")
-                        && !snapshot.hasChild("day3")) {
-                    daysNumbers[0] = "Dzień 1";
-                    daysNumbers[1] = "Dzień 2";
-                } else if (snapshot.hasChild("day1") && snapshot.hasChild("day2")
-                        && snapshot.hasChild("day3") && !snapshot.hasChild("day4")) {
-                    daysNumbers[0] = "Dzień 1";
-                    daysNumbers[1] = "Dzień 2";
-                    daysNumbers[2] = "Dzień 3";
-                } else if (snapshot.hasChild("day1") && snapshot.hasChild("day2")
-                        && snapshot.hasChild("day3") && snapshot.hasChild("day4")) {
-                    daysNumbers[0] = "Dzień 1";
-                    daysNumbers[1] = "Dzień 2";
-                    daysNumbers[2] = "Dzień 3";
-                    daysNumbers[3] = "Dzień 4";
-                }
-
-                arrayList = new ArrayList<>();
-                for (int i = 0; i < daysNumbers.length; i++) {
-                    DayModel dayModel = new DayModel(daysNumbers[i]);
-                    arrayList.add(dayModel);
-                }
-                LinearLayoutManager layoutManager = new LinearLayoutManager(ShowPlan.this, LinearLayoutManager.HORIZONTAL, false);
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-                daysAdapter = new HorizontalDaysAdapter(ShowPlan.this, arrayList, ShowPlan.this);
-                recyclerView.setAdapter(daysAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-
         breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -427,6 +409,7 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         });
     }
 
+
     @Override
     public void dayClicked(int position) {
 
@@ -447,6 +430,18 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         supper.setVisibility(View.VISIBLE);
         secondBreakfast.setVisibility(View.VISIBLE);
         snack.setVisibility(View.VISIBLE);
+
+
+        if (position == 0) {
+            date.setText(day1);
+        } else if (position == 1) {
+            date.setText(day2);
+        } else if (position == 2) {
+            date.setText(day3);
+        } else {
+            date.setText(day4);
+        }
+
 
         databaseReferenceBreakfast = FirebaseDatabase.getInstance().getReference("Planner").child(uid)
                 .child("day" + (position + 1)).child("breakfast");
@@ -636,6 +631,32 @@ public class ShowPlan extends AppCompatActivity implements HorizontalDaysAdapter
         });
 
 
+
+
+    }
+
+    private void setVisibility() {
+        recyclerView.setVisibility(View.INVISIBLE);
+        textViewBreakfast.setVisibility(View.INVISIBLE);
+        textViewDinner.setVisibility(View.INVISIBLE);
+        textViewSupper.setVisibility(View.INVISIBLE);
+        textViewSecondBreakfast.setVisibility(View.INVISIBLE);
+        textViewSnack.setVisibility(View.INVISIBLE);
+        breakfast.setVisibility(View.INVISIBLE);
+        dinner.setVisibility(View.INVISIBLE);
+        supper.setVisibility(View.INVISIBLE);
+        secondBreakfast.setVisibility(View.INVISIBLE);
+        snack.setVisibility(View.INVISIBLE);
+        textViewBreakfastTitle.setVisibility(View.INVISIBLE);
+        textViewDinnerTitle.setVisibility(View.INVISIBLE);
+        textViewSupperTitle.setVisibility(View.INVISIBLE);
+        textViewSecondBreakfastTitle.setVisibility(View.INVISIBLE);
+        textViewSnackTitle.setVisibility(View.INVISIBLE);
+        imageViewBreakfast.setVisibility(View.INVISIBLE);
+        imageViewDinner.setVisibility(View.INVISIBLE);
+        imageViewSupper.setVisibility(View.INVISIBLE);
+        imageViewSecondBreakfast.setVisibility(View.INVISIBLE);
+        imageViewSnack.setVisibility(View.INVISIBLE);
     }
 
 }

@@ -14,21 +14,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_show_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
         <TextView
             android:id="@+id/textViewIfPlanExist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
+            android:padding="10dp"
+            android:layout_marginStart="10dp"
             android:text="Ustalony plan"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_show_plan"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:text="Data"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_marginStart="10dp"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewAddBreakfast"
@@ -70,7 +80,7 @@
                     android:id="@+id/textViewChosenBreakfast"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="Śniadanie"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -137,7 +147,7 @@
                     android:id="@+id/textViewChosenSecondBreakfastPlanner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="II śniadanie"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -206,10 +216,10 @@
                     android:id="@+id/textViewChosenDinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="Obiad"
-                    android:textStyle="bold"
                     android:textSize="22sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -276,10 +286,10 @@
                     android:id="@+id/textViewChosenSupper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="Kolacja"
-                    android:textStyle="bold"
                     android:textSize="22sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -346,7 +356,7 @@
                     android:id="@+id/textViewChosenSnackPlanner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="Przekąska"
                     android:textSize="22sp"
                     android:textStyle="bold"

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class AddIngredientToRecipe extends AppCompatActivity {
 
     private EditText name, amount;
     private Spinner unit;
-    private FloatingActionButton addIngredient;
+    private Button addIngredient;
     IngredientModel newItem;
     DatabaseReference databaseReference;
     ArrayList<IngredientModel> ingredients;
@@ -64,7 +65,6 @@ public class AddIngredientToRecipe extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (int i = 0; i < snapshot.getChildrenCount(); i++) {
-                        Toast.makeText(AddIngredientToRecipe.this, "ok", Toast.LENGTH_SHORT).show();
                         String name = snapshot.child(String.valueOf(i)).child("name").getValue().toString();
                         double amount = Double.parseDouble(snapshot.child(String.valueOf(i))
                                 .child("amount").getValue().toString());

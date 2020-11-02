@@ -36,7 +36,7 @@ public class ChooseMeal extends AppCompatActivity {
     private EditText searchRecipeEditText;
     String day, meal;
 
-    private FirebaseUser user;
+    FirebaseUser user;
     String uid;
 
     @Override

@@ -52,8 +52,6 @@ public class EditIngredientRecipe extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key).child("ingredientModels");
 
-
-        //Toast.makeText(EditIngredient.this, key, Toast.LENGTH_LONG).show();
         String itemName = bundle.getString("name");
         name.setText(itemName);
 

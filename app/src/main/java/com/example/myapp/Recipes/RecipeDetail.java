@@ -33,8 +33,6 @@ import java.util.ArrayList;
 
 public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragment.DeleteListener, IngredientAdapter.ItemClickedListener{
 
-    private static final int PICK_IMAGE_REQUEST = 2;
-    Uri imageUri;
     private DatabaseReference databaseReference, databaseReferencePlanner, databaseReferenceIngredients;
     private String key;
     IngredientAdapter arrayAdapter;
@@ -75,11 +73,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
         databaseReferencePlanner = FirebaseDatabase.getInstance().getReference("Planner").child(uid);
 
-       // Toast.makeText(RecipeDetail.this, description, Toast.LENGTH_LONG).show();
-        /*textViewName.setText(name);
-        textViewDescription.setText(description);
-        textViewLink.setText(link);*/
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -116,7 +109,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
                                 .child("amount").getValue().toString());
                         final String unit = snapshot.child(String.valueOf(i))
                                 .child("unit").getValue().toString();
-                        //Toast.makeText(RecipeDetail.this, name, Toast.LENGTH_SHORT).show();
                         IngredientModel item = new IngredientModel(name, amount, unit);
                         ingredients.add(item);
                     }
@@ -148,7 +140,7 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
                                 if (snapshot.exists()) {
                                     String plannerKey = snapshot.child("key").getValue().toString();
                                     if (plannerKey.equals(key)) {
-                                        Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
                                         isInPlanner = true;
                                     }
                                 }
@@ -166,7 +158,7 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
                                 if (snapshot.exists()) {
                                     String plannerKey = snapshot.child("key").getValue().toString();
                                     if (plannerKey.equals(key)) {
-                                        Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
                                         isInPlanner = true;
                                     }
                                 }
@@ -184,7 +176,43 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
                                     String plannerKey = snapshot.child("key").getValue().toString();
                                     if (plannerKey.equals(key)) {
                                         //
-                                        Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                        isInPlanner = true;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        databaseReferencePlanner.child(days.get(i)).child("snack").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    String plannerKey = snapshot.child("key").getValue().toString();
+                                    if (plannerKey.equals(key)) {
+                                        //
+                                        //Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
+                                        isInPlanner = true;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        databaseReferencePlanner.child(days.get(i)).child("secondBreakfast").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    String plannerKey = snapshot.child("key").getValue().toString();
+                                    if (plannerKey.equals(key)) {
+                                        //
+                                        //Toast.makeText(RecipeDetail.this, "Nie można usunąć!", Toast.LENGTH_SHORT).show();
                                         isInPlanner = true;
                                     }
                                 }
@@ -217,7 +245,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                Toast.makeText(RecipeDetail.this, "Edycja", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(RecipeDetail.this, EditRecipe.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("key", key);
@@ -225,7 +252,6 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
                 startActivity(intent);
                 break;
             case R.id.delete:
-                Toast.makeText(RecipeDetail.this, "Usuwanie", Toast.LENGTH_LONG).show();
                 openDialog();
                 break;
         }
@@ -247,27 +273,11 @@ public class RecipeDetail extends AppCompatActivity implements DeleteRecipeFragm
         } else {
             Toast.makeText(this, "Nie można usunąć", Toast.LENGTH_SHORT).show();
         }
-        // testowanie usuwanie klucza też z planera
-
-        //databaseReference.removeValue();
-        //finish();
-        //Toast.makeText(RecipeDetail.this, key, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void itemClicked(int position) {
 
     }
-
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            //image.setImageURI(imageUri);
-        }
-    }*/
 
 }

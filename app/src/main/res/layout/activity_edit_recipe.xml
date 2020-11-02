@@ -13,24 +13,29 @@
 
         <Button
             android:id="@+id/buttonSaveChanges"
-            android:layout_width="130dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
+            android:background="@drawable/dark_round_button"
             android:text="Zapisz zmiany"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonEditRecipeSavePhoto" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageViewRecipeImageDetailEdit"
             android:layout_width="0dp"
             android:layout_height="420dp"
+            android:layout_marginTop="5dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSaveChanges"
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
@@ -267,17 +272,6 @@
 
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonEditRecipeSavePhoto"
-            android:layout_width="130dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
-            android:text="Zapisz zdjęcie"
-            app:layout_constraintEnd_toEndOf="@+id/imageViewRecipeImageDetailEdit"
-            app:layout_constraintTop_toTopOf="@+id/imageViewRecipeImageDetailEdit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

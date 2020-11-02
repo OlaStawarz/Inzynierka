@@ -25,9 +25,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class PlannerDay extends AppCompatActivity {
@@ -41,8 +44,7 @@ public class PlannerDay extends AppCompatActivity {
     private CardView snack, secondBreakfast;
     private CheckBox checkBoxSecondBreakfast, checkBoxSnack;
 
-    private DatabaseReference databaseReferencePlanner, databaseReferenceRecipe,
-            databaseReferenceShoppingList;
+    private DatabaseReference databaseReferenceShoppingList;
     private ArrayList<String> names, keys, units;
     private ArrayList<Double> amounts;
     IngredientModel item;
@@ -99,7 +101,7 @@ public class PlannerDay extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         assert bundle != null;
         String day = bundle.getString("day");
-        //Toast.makeText(this, day, Toast.LENGTH_SHORT).show();
+
 
         assert day != null;
         breakfastDatabaseReference = FirebaseDatabase.getInstance().getReference("Planner").child(uid).child(day).child("breakfast");
@@ -144,6 +146,7 @@ public class PlannerDay extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     item = postSnapshot.getValue(IngredientModel.class);
+                    assert item != null;
                     item.setItemKey(postSnapshot.getKey());
                     names.add(item.getName());
                     keys.add(item.getItemKey());
@@ -298,10 +301,7 @@ public class PlannerDay extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String name = snapshot.child("name").getValue().toString();
-                            if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
-                                textViewSnack.setText(name);
-                            else
-                                textViewSecondBreakfast.setText(name);
+                            textViewSecondBreakfast.setText(name);
                             for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
                                 final String ingredientName = snapshot.child("ingredientModels").child(String.valueOf(i))
                                         .child("name").getValue().toString();
@@ -344,10 +344,7 @@ public class PlannerDay extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String name = snapshot.child("name").getValue().toString();
-                            if (secondBreakfastTitle.getText().toString().equals("Przekąska"))
-                                textViewSecondBreakfast.setText(name);
-                            else
-                                textViewSnack.setText(name);
+                            textViewSnack.setText(name);
 
                             for (int i = 0; i < snapshot.child("ingredientModels").getChildrenCount(); i++) {
 
@@ -384,10 +381,11 @@ public class PlannerDay extends AppCompatActivity {
             public void onClick(View view) {
                 databaseReferenceShoppingList.removeValue();
                 for (int i = 0; i < names.size(); i++) {
-                    //Toast.makeText(PlannerDay.this, names.get(i), Toast.LENGTH_SHORT).show();
-                    IngredientModel ingredientModel = new IngredientModel(names.get(i), amounts.get(i), units.get(i));
+                    IngredientModel ingredient = new IngredientModel(names.get(i), amounts.get(i), units.get(i));
+
                     String uploadId = databaseReferenceShoppingList.push().getKey();
-                    databaseReferenceShoppingList.child(uploadId).setValue(ingredientModel);
+                    assert uploadId != null;
+                    databaseReferenceShoppingList.child(uploadId).setValue(ingredient);
                 }
                 finish();
             }
@@ -458,16 +456,16 @@ public class PlannerDay extends AppCompatActivity {
             addSnack.setVisibility(View.VISIBLE);
             snackTitle.setText("Przekąska");
         } else if (isSnack) {
-            secondBreakfast.setVisibility(View.VISIBLE);
-            secondBreakfastTitle.setVisibility(View.VISIBLE);
-            textViewSecondBreakfast.setVisibility(View.VISIBLE);
-            addSecondBreakfast.setVisibility(View.VISIBLE);
-            secondBreakfastTitle.setText("Przekąska");
+            snackTitle.setVisibility(View.VISIBLE);
+            snack.setVisibility(View.VISIBLE);
+            textViewSnack.setVisibility(View.VISIBLE);
+            addSnack.setVisibility(View.VISIBLE);
+            snackTitle.setText("Przekąska");
 
-            snackTitle.setVisibility(View.GONE);
-            snack.setVisibility(View.GONE);
-            textViewSnack.setVisibility(View.GONE);
-            addSnack.setVisibility(View.GONE);
+            secondBreakfast.setVisibility(View.GONE);
+            secondBreakfastTitle.setVisibility(View.GONE);
+            textViewSecondBreakfast.setVisibility(View.GONE);
+            addSecondBreakfast.setVisibility(View.GONE);
         } else if (isSecondBreakfast) {
             secondBreakfast.setVisibility(View.VISIBLE);
             secondBreakfastTitle.setVisibility(View.VISIBLE);

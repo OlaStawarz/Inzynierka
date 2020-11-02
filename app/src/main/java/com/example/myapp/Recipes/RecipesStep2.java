@@ -46,7 +46,7 @@ public class RecipesStep2 extends AppCompatActivity implements IngredientAdapter
         ingredientAmount = findViewById(R.id.editTextAmountRecipe);
         spinnerUnit = findViewById(R.id.spinnerUnitRecipe);
         next = findViewById(R.id.buttonNext2);
-        FloatingActionButton button = findViewById(R.id.floatingActionButtonAdd);
+        Button button = findViewById(R.id.floatingActionButtonAdd);
 
         ingredients = new ArrayList<>();
         names = new ArrayList<>();

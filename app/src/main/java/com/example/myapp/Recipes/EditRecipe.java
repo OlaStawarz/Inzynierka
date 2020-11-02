@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.myapp.Login;
+import com.example.myapp.MainActivity;
 import com.example.myapp.R;
 import com.example.myapp.ShoppingList.IngredientAdapter;
 import com.example.myapp.ShoppingList.IngredientModel;
@@ -55,9 +58,10 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
     private ArrayList<IngredientModel> ingredients;
     private ArrayList<String> category;
     private CheckBox breakfast, dinner, supper, snack;
-    Button saveChanges, saveImage;
+    Button saveChanges;
     FloatingActionButton addIngredient;
     String key;
+    private boolean isImageChanged;
 
     private FirebaseUser user;
     String uid;
@@ -72,7 +76,6 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         editTextDescription = findViewById(R.id.editTextDisplayDescriptionEdit);
         editTextLink = findViewById(R.id.editTextDisplayLinkEdit);
         saveChanges = findViewById(R.id.buttonSaveChanges);
-        saveImage = findViewById(R.id.buttonEditRecipeSavePhoto);
         addIngredient = findViewById(R.id.floatingActionBarAddItemRecipe);
         breakfast = findViewById(R.id.checkBoxEditBreakfast);
         dinner = findViewById(R.id.checkBoxEditDinner);
@@ -95,7 +98,15 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         key = bundle.getString("key");
-        //Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
+
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                save();
+                finish();
+            }
+        });
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Recipes").child(uid).child(key);
 
@@ -117,40 +128,10 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
             }
         });
 
-        saveImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StorageReference fileReference = storageReference.child(System.currentTimeMillis()
-                        + "." + getExtension(imageUri));
-
-                fileReference.putFile(imageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!urlTask.isSuccessful());
-                                Uri downloadUrl = urlTask.getResult();
-                                Toast.makeText(EditRecipe.this, downloadUrl.toString(), Toast.LENGTH_SHORT).show();
-                                databaseReference.child("imageUrl").setValue(downloadUrl.toString());
-                                Toast.makeText(EditRecipe.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
-                                //finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(EditRecipe.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-            }
-        });
-
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    //Toast.makeText(EditRecipe.this, snapshot.child("name").getValue().toString(), Toast.LENGTH_SHORT).show();
                     editTextName.setText(snapshot.child("name").getValue().toString());
                     editTextDescription.setText(snapshot.child("description").getValue().toString());
                     editTextLink.setText(snapshot.child("link").getValue().toString());
@@ -183,7 +164,6 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
                                 .child("amount").getValue().toString());
                         final String unit = snapshot.child(String.valueOf(i))
                                 .child("unit").getValue().toString();
-                        //Toast.makeText(RecipeDetail.this, name, Toast.LENGTH_SHORT).show();
                         IngredientModel item = new IngredientModel(name, amount, unit);
                         ingredients.add(item);
                     }
@@ -199,37 +179,7 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
             }
         });
 
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean isChange = false;
-                Toast.makeText(EditRecipe.this, "Edytowanie...", Toast.LENGTH_SHORT).show();
 
-                databaseReference.child("name").setValue(editTextName.getText().toString());
-                databaseReference.child("description").setValue(editTextDescription.getText().toString());
-                databaseReference.child("link").setValue(editTextLink.getText().toString());
-                if (breakfast.isChecked()) {
-                    category.add(breakfast.getText().toString());
-                    isChange = true;
-                }
-                if (dinner.isChecked()) {
-                    category.add(dinner.getText().toString());
-                    isChange = true;
-                }
-                if (supper.isChecked()) {
-                    category.add(supper.getText().toString());
-                    isChange = true;
-                }
-                if (snack.isChecked()) {
-                    category.add(snack.getText().toString());
-                    isChange = true;
-                }
-
-                if (isChange)
-                    databaseReference.child("category").setValue(category);
-                finish();
-            }
-        });
     }
 
     private void fileChooser() {
@@ -256,30 +206,64 @@ public class EditRecipe extends AppCompatActivity implements IngredientAdapter.I
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void uploadImage() {
+    private void save() {
 
-        StorageReference fileReference = storageReference.child(System.currentTimeMillis()
-                + "." + getExtension(imageUri));
+        if (imageUri == null) {
+            updateFields();
+        } else {
+            StorageReference fileReference = storageReference.child(System.currentTimeMillis()
+                    + "." + getExtension(imageUri));
 
-        fileReference.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!urlTask.isSuccessful());
-                        Uri downloadUrl = urlTask.getResult();
-                        Toast.makeText(EditRecipe.this, downloadUrl.toString(), Toast.LENGTH_SHORT).show();
-                        databaseReference.child("imageUrl").setValue(downloadUrl);
-                        Toast.makeText(EditRecipe.this, "Correctly inserted image", Toast.LENGTH_LONG).show();
-                        //finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(EditRecipe.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+            fileReference.putFile(imageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!urlTask.isSuccessful());
+                            Uri downloadUrl = urlTask.getResult();
+
+                            updateFields();
+
+                            databaseReference.child("imageUrl").setValue(downloadUrl.toString());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(EditRecipe.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+
+
+    }
+
+    private void updateFields() {
+
+        Toast.makeText(EditRecipe.this, "Edytowanie...", Toast.LENGTH_SHORT).show();
+        boolean isChange = false;
+        databaseReference.child("name").setValue(editTextName.getText().toString());
+        databaseReference.child("description").setValue(editTextDescription.getText().toString());
+        databaseReference.child("link").setValue(editTextLink.getText().toString());
+        if (breakfast.isChecked()) {
+            category.add(breakfast.getText().toString());
+            isChange = true;
+        }
+        if (dinner.isChecked()) {
+            category.add(dinner.getText().toString());
+            isChange = true;
+        }
+        if (supper.isChecked()) {
+            category.add(supper.getText().toString());
+            isChange = true;
+        }
+        if (snack.isChecked()) {
+            category.add(snack.getText().toString());
+            isChange = true;
+        }
+
+        if (isChange)
+            databaseReference.child("category").setValue(category);
     }
 
     @Override

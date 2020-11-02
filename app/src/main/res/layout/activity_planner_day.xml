@@ -12,13 +12,17 @@
 
         <Button
             android:id="@+id/buttonSaveDay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/round_button"
+            android:background="@drawable/dark_round_button"
             android:text="Zapisz"
+            android:textSize="18sp"
+            android:textColor="#fff"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
@@ -189,26 +193,15 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:text="Dodaj posiłki"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/cardViewAddSupper"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewAddSupper" />
-
         <CheckBox
             android:id="@+id/checkBoxSecondBreakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="II śniadanie"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintStart_toStartOf="@+id/cardViewAddSupper"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewAddSupper" />
 
         <CheckBox
             android:id="@+id/checkBoxAddSnack"

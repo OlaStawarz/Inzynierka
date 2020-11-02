@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapp.Planner.Planner;
 import com.example.myapp.R;
@@ -138,7 +139,7 @@ public class ShoppingList extends AppCompatActivity implements IngredientAdapter
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(ShoppingList.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

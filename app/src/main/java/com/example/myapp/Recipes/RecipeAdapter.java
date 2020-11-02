@@ -33,21 +33,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private Context context;
     private List<RecipeModel> recipes;
     private OnItemClickedListener onItemClickedListener;
-    private OnFavouriteButtonClickListener onFavouriteButtonClickListener;
 
-    public RecipeAdapter(Context context, List<RecipeModel> recipes, OnItemClickedListener onItemClickedListener,
-                         OnFavouriteButtonClickListener onFavouriteButtonClickListener) {
+    public RecipeAdapter(Context context, List<RecipeModel> recipes, OnItemClickedListener onItemClickedListener) {
         this.context = context;
         this.recipes = recipes;
         this.onItemClickedListener = onItemClickedListener;
-        this.onFavouriteButtonClickListener = onFavouriteButtonClickListener;
     }
 
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.recipe_item, parent, false);
-        return new RecipeViewHolder(v, onItemClickedListener, onFavouriteButtonClickListener);
+        return new RecipeViewHolder(v, onItemClickedListener);
     }
 
     @Override
@@ -77,47 +74,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        OnFavouriteButtonClickListener onFavouriteButtonClickListener;
         public TextView recipeName, link, ingredients;
         public ImageView imageView, addToFavouriteImageView;
         OnItemClickedListener onItemClickedListener;
         boolean isFavourite;
         DatabaseReference databaseReference;
 
-        public RecipeViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener,
-                                final OnFavouriteButtonClickListener onFavouriteButtonClickListener) {
+        public RecipeViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.textViewRecipeNameBreakfast);
             imageView = itemView.findViewById(R.id.imageViewRecipeImageBreakfast);
-            addToFavouriteImageView = itemView.findViewById(R.id.imageViewAddToFavourite);
             this.onItemClickedListener = onItemClickedListener;
-            this.onFavouriteButtonClickListener = onFavouriteButtonClickListener;
             databaseReference = FirebaseDatabase.getInstance().getReference("Recipes");
-            isFavourite = false;
-
-
-            addToFavouriteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (onFavouriteButtonClickListener != null) {
-                        int position = getAdapterPosition();
-                        RecipeModel recipeModel = recipes.get(position);
-                        if (position != RecyclerView.NO_POSITION) {
-                            if (!isFavourite) {
-                                addToFavouriteImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite));
-                                //databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("true");
-                                isFavourite = true;
-                            } else {
-                                addToFavouriteImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_favorite_add));
-                                //databaseReference.child(recipeModel.getRecipeKey()).child("favourite").setValue("false");
-                                isFavourite = false;
-                            }
-                            onFavouriteButtonClickListener.addToFavourite(position);
-                        }
-                    }
-                }
-            });
 
             itemView.setOnClickListener(this);
         }
@@ -133,12 +101,5 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         void itemClicked (int position);
     }
 
-    public interface OnFavouriteButtonClickListener {
-        void addToFavourite (int position);
-    }
-
-    public void setOnButtonClickListener (OnFavouriteButtonClickListener onButtonClickListener) {
-        this.onFavouriteButtonClickListener = onButtonClickListener;
-    }
 
 }

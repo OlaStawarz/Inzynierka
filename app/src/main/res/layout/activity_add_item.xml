@@ -6,26 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".ShoppingList.AddItem">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutAddIngredient"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/background_layout"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_ingredient"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/textViewAddNameShoppingList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:text="Dodaj nazwę"
+        android:layout_marginTop="20dp"
+        android:text="@string/name"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayoutAddIngredient" />
 
     <EditText
         android:id="@+id/editTextEditName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
-        android:hint="chleb"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,15 +59,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Ilość"
+        android:text="@string/amount"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/editTextEditName"
         app:layout_constraintTop_toBottomOf="@+id/editTextEditName" />
 
     <EditText
         android:id="@+id/editTextEditAmount"
-        android:layout_width="109dp"
-        android:layout_height="42dp"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:inputType="number"
@@ -55,28 +78,33 @@
         android:id="@+id/textViewAddUnitShoppingList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Jednostka"
+        android:layout_marginStart="160dp"
+        android:text="@string/unit"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewAddAmountShoppingList"
         app:layout_constraintTop_toTopOf="@+id/textViewAddAmountShoppingList" />
 
     <Spinner
         android:id="@+id/spinnerUnit"
-        android:layout_width="134dp"
-        android:layout_height="41dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/editTextEditAmount"
-        app:layout_constraintEnd_toEndOf="@+id/textViewAddUnitShoppingList"
+        app:layout_constraintStart_toStartOf="@+id/textViewAddUnitShoppingList"
         app:layout_constraintTop_toTopOf="@+id/editTextEditAmount" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
         android:id="@+id/floatingActionBarAddItemShoppingList"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_add"
-        app:layout_constraintEnd_toEndOf="@+id/spinnerUnit"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEditAmount" />
+        android:layout_marginEnd="20dp"
+        android:text="@string/add"
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:background="@drawable/dark_round_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUnit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

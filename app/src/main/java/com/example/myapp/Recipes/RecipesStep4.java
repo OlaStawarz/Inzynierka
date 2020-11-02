@@ -78,12 +78,6 @@ public class RecipesStep4 extends AppCompatActivity {
         units = bundle.getStringArrayList("units");
         description = bundle.getString("description");
         link = bundle.getString("link");
-        /*newBundle.putString("description", description.getText().toString());
-        newBundle.putString("link", link.getText().toString());*/
-
-        //Toast.makeText(this, names.get(0) + amounts.get(0) + units.get(0), Toast.LENGTH_SHORT).show();
-        //description = bundle.getString("description");
-        //link = bundle.getString("link");
 
         buttonChooseFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +158,7 @@ public class RecipesStep4 extends AppCompatActivity {
                             link = "---";
                         }
                         //List<String> listOfIngredients = Arrays.asList(ingredients.getText().toString().split(" "));
-                        recipeModel = new RecipeModel(name, category, ingredients,
+                        recipeModel = new RecipeModel(name, category,
                                 description, link, downloadUrl.toString(), ingredientModels);
 
                         String uploadId = databaseReference.push().getKey();

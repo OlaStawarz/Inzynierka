@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
@@ -44,23 +46,31 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 currentEmail = email.getText().toString();
                 currentPassword = password.getText().toString();
-                if (TextUtils.isEmpty(currentEmail) || TextUtils.isEmpty(currentPassword)) {
-                    Toast.makeText(Login.this, "Enter email and password", Toast.LENGTH_SHORT).show();
+                if (currentPassword.isEmpty()) {
+                    password.setError("Wprowadź hasło.");
                     return;
                 }
+                if (currentEmail.isEmpty()) {
+                    email.setError("Wprowadź email.");
+                    return;
+                }
+
                 mAuth.signInWithEmailAndPassword(currentEmail, currentPassword)
                         .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
+                                    updateUI();
                                 } else {
-                                    // If sign in fails, display a message to the user.
-
-                                    Toast.makeText(Login.this, "Niepoprawne dane logowania",
-                                            Toast.LENGTH_SHORT).show();
+                                    try {
+                                        throw task.getException();
+                                    } catch (FirebaseAuthInvalidUserException e) {
+                                        email.setError("Podany email nie istnieje.");
+                                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                                        password.setError("Wprowadzono niepoprawne hasło.");
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         });
@@ -88,13 +98,12 @@ public class Login extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null)
-            updateUI(currentUser);
+            updateUI();
     }
 
-    private void updateUI(FirebaseUser user) {
+    private void updateUI() {
         Intent intent = new Intent(Login.this, Planner.class);
         startActivity(intent);
     }

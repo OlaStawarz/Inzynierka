@@ -5,24 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+
+import java.util.Objects;
 
 public class Register extends AppCompatActivity {
 
-    private EditText email, password;
-    private Button register;
+    private EditText emailEditText, passwordEditText;
+    private Button registerButton;
+
     private FirebaseAuth mAuth;
 
     @Override
@@ -30,18 +31,23 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        email = findViewById(R.id.editTextTextEmailAddress);
-        password = findViewById(R.id.editTextTextPassword);
-        register = findViewById(R.id.buttonRegister);
+        emailEditText = findViewById(R.id.editTextTextEmailAddress);
+        passwordEditText = findViewById(R.id.editTextTextPassword);
+        registerButton = findViewById(R.id.buttonRegister);
+
         mAuth = FirebaseAuth.getInstance();
 
-        register.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userEmail = email.getText().toString();
-                String userPassword = password.getText().toString();
-                if (TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)) {
-                    Toast.makeText(Register.this, "Enter password and email", Toast.LENGTH_SHORT).show();
+                String userEmail = emailEditText.getText().toString();
+                String userPassword = passwordEditText.getText().toString();
+                if (userEmail.isEmpty()) {
+                    emailEditText.setError("Wprowadź email.");
+                    return;
+                }
+                if (userPassword.isEmpty()) {
+                    passwordEditText.setError("Wprowadź hasło.");
                     return;
                 }
                 registerUser(userEmail, userPassword);
@@ -51,26 +57,32 @@ public class Register extends AppCompatActivity {
 
     }
 
-    public void registerUser (String email, String password) {
+    public void registerUser (final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            Intent intent = new Intent(Register.this, Login.class);
+                            startActivity(intent);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            try {
+                                throw Objects.requireNonNull(task.getException());
+                            } catch (FirebaseAuthWeakPasswordException e) {
+                                passwordEditText.setError("Hasło musi zawierać co najmniej 6 znaków.");
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                emailEditText.setError("Niepoprawny adres email.");
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                emailEditText.setError("Użytkownik o podanym adresie email już istnieje.");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-
-                        // ...
                     }
                 });
     }
 
-    public void updateUI(FirebaseUser user) {
+    public void updateUI() {
         Intent intent = new Intent(Register.this, Login.class);
         startActivity(intent);
     }
